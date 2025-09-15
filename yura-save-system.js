@@ -24,6 +24,7 @@ class YuraSaveSystem {
                 consecutiveCorrectKorean: data.consecutiveCorrectKorean || 0,
                 consecutiveCorrectMath: data.consecutiveCorrectMath || 0,
                 mistakes: data.mistakes || [],
+                savedProblems: data.savedProblems || [],
                 stats: data.stats || this.getDefaultStats(),
                 
                 // Session metadata
@@ -75,9 +76,9 @@ class YuraSaveSystem {
             // Add current snapshot to history
             fullData.history.push(snapshot);
             
-            // Keep only last 100 sessions for performance
-            if (fullData.history.length > 100) {
-                fullData.history = fullData.history.slice(-100);
+            // Keep only last 20 sessions to prevent localStorage quota issues
+            if (fullData.history.length > 20) {
+                fullData.history = fullData.history.slice(-20);
             }
 
             // Update latest data
@@ -220,6 +221,34 @@ class YuraSaveSystem {
             }
         });
     }
+    
+    // Clean up storage to prevent quota issues
+    cleanupStorage() {
+        try {
+            const fullData = this.loadFromLocalStorage();
+            if (!fullData) return;
+            
+            // Keep only recent history
+            if (fullData.history && fullData.history.length > 10) {
+                fullData.history = fullData.history.slice(-10);
+            }
+            
+            // Limit saved problems to 50
+            if (fullData.latest && fullData.latest.savedProblems && fullData.latest.savedProblems.length > 50) {
+                fullData.latest.savedProblems = fullData.latest.savedProblems.slice(-50);
+            }
+            
+            // Limit mistakes to 30
+            if (fullData.latest && fullData.latest.mistakes && fullData.latest.mistakes.length > 30) {
+                fullData.latest.mistakes = fullData.latest.mistakes.slice(-30);
+            }
+            
+            localStorage.setItem('yura_save_data', JSON.stringify(fullData));
+            console.log('Storage cleaned up successfully');
+        } catch (error) {
+            console.error('Cleanup error:', error);
+        }
+    }
 
     // Migrate old data format to new format
     migrateData(oldData) {
@@ -243,6 +272,10 @@ class YuraSaveSystem {
             }
         } else {
             migrated.latest.stats = this.getDefaultStats();
+        }
+        // Ensure savedProblems exists
+        if (!migrated.latest.savedProblems) {
+            migrated.latest.savedProblems = [];
         }
         
         return migrated;
