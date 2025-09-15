@@ -18,14 +18,21 @@ class YuraSaveSystem {
                 weekStartDate: data.weekStartDate,
                 weeklyRewards: data.weeklyRewards || [],
                 weeklyScore: data.weeklyScore || 0,
+                // (추가) 영어, 한글, 수학 개별 주간 점수 모두 저장
+                weeklyEnglishScore: data.weeklyEnglishScore || 0,
                 weeklyKoreanScore: data.weeklyKoreanScore || 0,
                 weeklyMathScore: data.weeklyMathScore || 0,
+                // (추가) 레벨 및 연속 정답 카운터 저장 (기존 누락 필드)
+                englishLevel: data.englishLevel || 1,
                 mathLevel: data.mathLevel || 1,
+                consecutiveCorrectEnglish: data.consecutiveCorrectEnglish || 0,
                 consecutiveCorrectKorean: data.consecutiveCorrectKorean || 0,
                 consecutiveCorrectMath: data.consecutiveCorrectMath || 0,
                 mistakes: data.mistakes || [],
                 savedProblems: data.savedProblems || [],
                 stats: data.stats || this.getDefaultStats(),
+                // (추가) 단어장 보존
+                vocabulary: data.vocabulary || [],
                 
                 // Session metadata
                 totalSessions: (data.totalSessions || 0) + 1,
@@ -120,16 +127,16 @@ class YuraSaveSystem {
     loadLatestData() {
         const fullData = this.loadFromLocalStorage();
         if (!fullData || !fullData.latest) return null;
-        
-        // Check if data is too old (7 days)
+        // (변경) 7일 경과 시 초기화하지 않고 그대로 사용. 필요 시 stale 플래그만 표시.
         if (fullData.lastUpdated) {
             const daysDiff = (Date.now() - new Date(fullData.lastUpdated)) / (1000 * 60 * 60 * 24);
             if (daysDiff > 7) {
-                console.log('Data older than 7 days, will be reset');
-                return null;
+                fullData.latest.__stale = true; // 소비 코드가 원하면 안내용으로 활용 가능
             }
         }
-        
+
+        // (복구) 스냅샷에 누락되었던 필드가 있다면 레거시 localStorage 키에서 복구 시도
+        this.recoverLegacyFields(fullData.latest);
         return fullData.latest;
     }
 
@@ -247,6 +254,34 @@ class YuraSaveSystem {
             console.log('Storage cleaned up successfully');
         } catch (error) {
             console.error('Cleanup error:', error);
+        }
+    }
+
+    // 레거시 개별 키로 저장되던 값 복구 (초기 버전 호환)
+    recoverLegacyFields(latest) {
+        if (!latest) return;
+        // 영어 레벨 / 점수 / 연속 정답
+        if (latest.englishLevel === undefined) {
+            const v = localStorage.getItem('learningApp_englishLevel');
+            if (v !== null) latest.englishLevel = parseInt(v, 10) || 1;
+        }
+        if (latest.weeklyEnglishScore === undefined) {
+            const v = localStorage.getItem('learningApp_weeklyEnglishScore');
+            if (v !== null) latest.weeklyEnglishScore = parseInt(v, 10) || 0;
+        }
+        if (latest.consecutiveCorrectEnglish === undefined) {
+            const v = localStorage.getItem('learningApp_consecutiveEnglish');
+            if (v !== null) latest.consecutiveCorrectEnglish = parseInt(v, 10) || 0;
+        }
+        if (latest.vocabulary === undefined) {
+            try {
+                const v = localStorage.getItem('learningApp_vocabulary');
+                latest.vocabulary = v ? JSON.parse(v) : [];
+            } catch { latest.vocabulary = []; }
+        }
+        // 보완: stats에 english 섹션 없는 경우 기본 구조 추가
+        if (latest.stats && !latest.stats.english) {
+            latest.stats.english = {};
         }
     }
 

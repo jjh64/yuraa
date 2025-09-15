@@ -75,7 +75,7 @@
             
             #home-screen main {
                 display: grid !important;
-                grid-template-columns: repeat(5, 1fr) !important; /* 홈 화면을 항상 5열로 고정 */
+                grid-template-columns: repeat(3, 1fr) !important; /* 3열(윗줄 3개 + 아랫줄 3개) */
                 gap: 1.5rem !important;
             }
             
@@ -127,9 +127,14 @@
             .modal-grid, 
             #reward-inputs > div {
                 display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important; /* 보상 설정 그리드를 3열로 고정 */
-                gap: 1rem !important;
+                grid-template-columns: repeat(4, 1fr) !important; /* 보상 설정 그리드를 4열(보상 / 영어 / 한글 / 수학)로 고정 */
+                gap: 0.75rem !important;
             }
+
+            /* 보상 설정 영역: 라벨 줄바꿈 방지 및 입력 크기 조정 */
+            #week-setup-modal label { white-space: nowrap; }
+            #week-setup-modal .reward-desc { width: 100%; }
+            #week-setup-modal input[type=number] { width: 100%; }
             
             #problem-container .grid,
             .options-grid {
@@ -264,7 +269,7 @@
             </div>
 
 
-            <main class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-8">
+            <main class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                 <div id="start-english" class="main-button">
                     <div class="subject-icon">EN</div>
                     <div class="subject-title">영어</div>
@@ -380,50 +385,31 @@
                 <p class="text-center text-gray-500 mb-4">영어, 한글, 수학 점수를 모두 넘어야 보상을 받을 수 있어요!</p>
                 <p id="modal-message" class="text-center text-red-500 mb-4 font-bold h-6"></p>
                 <div id="reward-inputs">
-                    <div class="modal-grid grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-4">
-                        <input type="text" placeholder="보상 내용 (예: 아이스크림)" class="reward-desc col-span-1 p-2 border-2 rounded-lg">
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-purple-600">영어</label>
-                           <input type="number" placeholder="목표" class="reward-goal-english w-full p-2 border-2 rounded-lg" value="100">
-                        </div>
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-cyan-600">한글</label>
-                           <input type="number" placeholder="목표" class="reward-goal-korean w-full p-2 border-2 rounded-lg" value="100">
-                        </div>
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-yellow-600">수학</label>
-                           <input type="number" placeholder="목표" class="reward-goal-math w-full p-2 border-2 rounded-lg" value="100">
-                        </div>
+                    <!-- Header row (desktop) -->
+                    <div class="hidden md:grid grid-cols-4 text-sm font-bold text-gray-600 mb-2 px-1">
+                        <div>보상 내용</div>
+                        <div class="text-center text-purple-600">영어 목표</div>
+                        <div class="text-center text-cyan-600">한글 목표</div>
+                        <div class="text-center text-yellow-600">수학 목표</div>
                     </div>
-                     <div class="modal-grid grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-4">
-                        <input type="text" placeholder="보상 내용 (예: 영화 보기)" class="reward-desc col-span-1 p-2 border-2 rounded-lg">
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-purple-600">영어</label>
-                           <input type="number" placeholder="목표" class="reward-goal-english w-full p-2 border-2 rounded-lg" value="250">
-                        </div>
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-cyan-600">한글</label>
-                           <input type="number" placeholder="목표" class="reward-goal-korean w-full p-2 border-2 rounded-lg" value="250">
-                        </div>
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-yellow-600">수학</label>
-                           <input type="number" placeholder="목표" class="reward-goal-math w-full p-2 border-2 rounded-lg" value="250">
-                        </div>
+                    <!-- Reward rows: 4 columns (desc / english / korean / math) -->
+                    <div class="modal-grid grid grid-cols-1 md:grid-cols-4 items-center mb-4">
+                        <input type="text" placeholder="보상 내용 (예: 냉장고를 부탁해 보기)" class="reward-desc p-2 border-2 rounded-lg" aria-label="보상 내용">
+                        <input type="number" placeholder="영어" class="reward-goal-english p-2 border-2 rounded-lg text-center" aria-label="영어 목표" value="300">
+                        <input type="number" placeholder="한글" class="reward-goal-korean p-2 border-2 rounded-lg text-center" aria-label="한글 목표" value="300">
+                        <input type="number" placeholder="수학" class="reward-goal-math p-2 border-2 rounded-lg text-center" aria-label="수학 목표" value="300">
                     </div>
-                     <div class="modal-grid grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-6">
-                        <input type="text" placeholder="보상 내용 (예: 원하는 책 사기)" class="reward-desc col-span-1 p-2 border-2 rounded-lg">
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-purple-600">영어</label>
-                           <input type="number" placeholder="목표" class="reward-goal-english w-full p-2 border-2 rounded-lg" value="500">
-                        </div>
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-cyan-600">한글</label>
-                           <input type="number" placeholder="목표" class="reward-goal-korean w-full p-2 border-2 rounded-lg" value="500">
-                        </div>
-                        <div class="flex items-center gap-2">
-                           <label class="font-bold text-yellow-600">수학</label>
-                           <input type="number" placeholder="목표" class="reward-goal-math w-full p-2 border-2 rounded-lg" value="500">
-                        </div>
+                    <div class="modal-grid grid grid-cols-1 md:grid-cols-4 items-center mb-4">
+                        <input type="text" placeholder="보상 내용 (예: 원하는 책 사기)" class="reward-desc p-2 border-2 rounded-lg" aria-label="보상 내용">
+                        <input type="number" placeholder="영어" class="reward-goal-english p-2 border-2 rounded-lg text-center" aria-label="영어 목표" value="500">
+                        <input type="number" placeholder="한글" class="reward-goal-korean p-2 border-2 rounded-lg text-center" aria-label="한글 목표" value="500">
+                        <input type="number" placeholder="수학" class="reward-goal-math p-2 border-2 rounded-lg text-center" aria-label="수학 목표" value="500">
+                    </div>
+                    <div class="modal-grid grid grid-cols-1 md:grid-cols-4 items-center mb-6">
+                        <input type="text" placeholder="보상 내용 (예: Roblox 1 hour)" class="reward-desc p-2 border-2 rounded-lg" aria-label="보상 내용">
+                        <input type="number" placeholder="영어" class="reward-goal-english p-2 border-2 rounded-lg text-center" aria-label="영어 목표" value="1000">
+                        <input type="number" placeholder="한글" class="reward-goal-korean p-2 border-2 rounded-lg text-center" aria-label="한글 목표" value="1000">
+                        <input type="number" placeholder="수학" class="reward-goal-math p-2 border-2 rounded-lg text-center" aria-label="수학 목표" value="1000">
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -1416,10 +1402,10 @@
                     <span>Correct! 🎉 (+${points} points)</span>
                 </div>`;
                 consecutiveCorrectEnglish++;
-                
-                if (currentSessionType === 'review') { 
-                    mistakes.splice(currentMistakeIndex, 1); 
-                    saveMistakes(); 
+                // Review 모드에서도 오답을 삭제하지 않고 유지 (요청사항)
+                if (currentSessionType === 'review') {
+                    currentMistakeIndex++; // 다음 인덱스로만 이동
+                    // 유지되므로 save 필요 없음
                 }
             } else {
                 const basePenalty = 5;
@@ -1538,10 +1524,9 @@
                 </div>`;
                 consecutiveCorrectKorean++;
                 consecutiveIncorrectKorean = 0;
-                
-                if (currentSessionType === 'review') { 
-                    mistakes.splice(currentMistakeIndex, 1); 
-                    saveMistakes(); 
+                // Review 모드에서도 삭제하지 않음
+                if (currentSessionType === 'review') {
+                    currentMistakeIndex++;
                 }
             } else {
                 const basePenalty = 5;
@@ -1689,10 +1674,8 @@
                     <img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg">
                     <span>정답입니다! 👍 (+${points}점)</span>
                 </div>`;
-                
-                if (currentSessionType === 'review') { 
-                    mistakes.splice(currentMistakeIndex, 1); 
-                    saveMistakes(); 
+                if (currentSessionType === 'review') {
+                    currentMistakeIndex++; // 삭제하지 않고 진행
                 } else {
                     mathScore++; 
                     consecutiveCorrectMath++; 
