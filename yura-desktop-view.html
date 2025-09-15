@@ -1072,61 +1072,67 @@
             const modalMessage = document.getElementById('modal-message');
             modalMessage.textContent = '';
             const newRewards = [];
-            const rewardDivs = document.querySelectorAll('#reward-inputs > div');
+            // Select only actual reward rows (skip header) by targeting rows that contain inputs
+            const rewardDivs = document.querySelectorAll('#reward-inputs .modal-grid');
             let isValid = true, hasInput = false;
 
             rewardDivs.forEach(div => {
-                const desc = div.querySelector('.reward-desc').value.trim();
-                const goal_en = div.querySelector('.reward-goal-english').value;
-                const goal_ko = div.querySelector('.reward-goal-korean').value;
-                const goal_ma = div.querySelector('.reward-goal-math').value;
-                if (desc && goal_en && goal_ko && goal_ma) {
-                    newRewards.push({ desc, goal_en: parseInt(goal_en), goal_ko: parseInt(goal_ko), goal_ma: parseInt(goal_ma) });
+                const descEl = div.querySelector('.reward-desc');
+                const enEl = div.querySelector('.reward-goal-english');
+                const koEl = div.querySelector('.reward-goal-korean');
+                const maEl = div.querySelector('.reward-goal-math');
+                if (!descEl || !enEl || !koEl || !maEl) return; // safety
+                const desc = descEl.value.trim();
+                const goal_en = enEl.value.trim();
+                const goal_ko = koEl.value.trim();
+                const goal_ma = maEl.value.trim();
+                const anyFilled = desc || goal_en || goal_ko || goal_ma;
+                if (anyFilled) {
+                    // If partially filled -> invalid
+                    if (!(desc && goal_en && goal_ko && goal_ma)) {
+                        isValid = false;
+                        return;
+                    }
                     hasInput = true;
-                } else if (desc || goal_en || goal_ko || goal_ma) {
-                    isValid = false;
+                    newRewards.push({
+                        desc,
+                        goal_en: Number(goal_en),
+                        goal_ko: Number(goal_ko),
+                        goal_ma: Number(goal_ma)
+                    });
                 }
             });
-            if (!isValid) { 
-                modalMessage.textContent = '모든 칸(보상, 영어, 한글, 수학)을 입력해주세요.'; 
-                return; 
+
+            if (!isValid) {
+                modalMessage.textContent = '모든 칸(보상, 영어, 한글, 수학)을 입력해주세요.';
+                return;
             }
-            if (!hasInput) { 
-                modalMessage.textContent = '하나 이상의 보상을 설정해야 합니다.'; 
-                return; 
+            if (!hasInput) {
+                modalMessage.textContent = '하나 이상의 보상을 설정해야 합니다.';
+                return;
             }
-            
-            // 새 주를 시작할 때만 점수 초기화 (주간 체크를 통해 판단)
+
+            // Determine if we should reset scores (new week or no existing weekStartDate)
             const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
             const shouldResetScores = !weekStartDate || (Date.now() - weekStartDate > oneWeekInMs);
-            
+
             weeklyRewards = newRewards;
             weekStartDate = Date.now();
-            
+
             if (shouldResetScores) {
-                console.log('새 주 시작 - 점수 초기화');
-                weeklyScore = 0; 
+                weeklyScore = 0;
                 weeklyEnglishScore = 0;
-                weeklyKoreanScore = 0; 
+                weeklyKoreanScore = 0;
                 weeklyMathScore = 0;
                 consecutiveCorrectEnglish = 0;
-                consecutiveCorrectKorean = 0; 
                 consecutiveCorrectMath = 0;
-            } else {
-                console.log('보상만 업데이트 - 기존 점수 유지');
+                consecutiveCorrectKorean = 0;
             }
-            
+
             if (saveAllData()) {
-                document.getElementById('week-setup-form').classList.add('hidden');
-                document.getElementById('week-setup-success').classList.remove('hidden');
-
                 updateHomeScreenUI();
-
-                setTimeout(() => {
-                    weekSetupModal.classList.add('hidden');
-                    document.getElementById('week-setup-form').classList.remove('hidden');
-                    document.getElementById('week-setup-success').classList.add('hidden');
-                }, 2000);
+                weekSetupModal.classList.add('hidden');
+                showNotification('이번 주 보상이 저장되었어요!');
             }
         }
 
@@ -1966,7 +1972,7 @@
                             <span class="font-bold mr-2">${type}</span>
                             <span class="text-sm text-gray-600">${preview}</span>
                         </div>
-                        <button onclick="deleteSavedProblem(${index})" class="btn btn-red px-3 py-1 text-sm">삭제</button>
+                        <button onclick="deleteSavedProblem(${index})" class="text-red-500 hover:text-red-700 text-xl">❌</button>
                     </div>`;
             });
             
@@ -2025,7 +2031,7 @@
                             <span class="font-bold mr-2">${type}</span>
                             <span class="text-sm text-gray-600">${preview}</span>
                         </div>
-                        <button onclick="deleteMistake(${index})" class="btn btn-red px-3 py-1 text-sm">삭제</button>
+                        <button onclick="deleteMistake(${index})" class="text-red-500 hover:text-red-700 text-xl">❌</button>
                     </div>`;
             });
             
@@ -2328,125 +2334,6 @@
         // Make deleteVocabulary globally accessible
         window.deleteVocabulary = deleteVocabulary;
 
-    startEnglishBtn.addEventListener('click', () => startSession('english'));
-    startKoreanBtn.addEventListener('click', () => startSession('korean'));
-    startMathBtn.addEventListener('click', () => startSession('math'));
-    startReviewBtn.addEventListener('click', () => startSession('review'));
-    startSavedBtn.addEventListener('click', () => startSession('saved'));
-        startVocabularyBtn.addEventListener('click', showVocabularyScreen);
-        
-        // Vocabulary screen event listeners
-        vocabHomeButton.addEventListener('click', () => {
-            vocabularyScreen.classList.add('hidden');
-            homeScreen.classList.remove('hidden');
-            updateHomeScreenUI();
-        });
-        
-        vocabSearch.addEventListener('input', () => {
-            displayVocabulary(vocabSearch.value, vocabFilter.value);
-        });
-        
-        vocabFilter.addEventListener('change', () => {
-            displayVocabulary(vocabSearch.value, vocabFilter.value);
-        });
-        
-        homeButton.addEventListener('click', () => {
-            learningScreen.classList.add('hidden');
-            vocabularyScreen.classList.add('hidden');
-            homeScreen.classList.remove('hidden');
-            updateHomeScreenUI();
-        });
-        
-        statsButton.addEventListener('click', showStatsModal);
-        closeStatsModal.addEventListener('click', () => statsModal.classList.add('hidden'));
-        startNewWeekButton.addEventListener('click', () => openWeekSetupModal());
-        saveWeekButton.addEventListener('click', saveWeeklyGoals);
-        cancelWeekButton.addEventListener('click', () => weekSetupModal.classList.add('hidden'));
-        
-        // 홈 화면 통계 버튼
-        homeStatsButton.addEventListener('click', showStatsModal);
-        
-        resetStatsButton.addEventListener('click', resetStats);
-        
-        // Level change handlers
-        englishLevelSelect.addEventListener('change', () => {
-            const newLevel = parseInt(englishLevelSelect.value);
-            if (newLevel !== englishLevel) {
-                if (confirm(`영어 난이도를 레벨 ${newLevel}로 변경하시겠습니까?
-
-⚠️ 주의: 연속 정답 보너스가 초기화됩니다.`)) {
-                    englishLevel = newLevel;
-                    consecutiveCorrectEnglish = 0;
-                    prefetchedEnglishProblem = null;
-                    // Update difficulty display if currently studying English
-                    if (currentSessionType === 'english') {
-                        englishDifficultyDisplay.textContent = `난이도: ${englishLevel}`;
-                    }
-                    saveAllData();
-                    alert(`영어 레벨이 ${newLevel}로 변경되었습니다!`);
-                    updateHomeScreenUI();
-                } else {
-                    englishLevelSelect.value = englishLevel.toString();
-                }
-            }
-        });
-
-        mathLevelSelect.addEventListener('change', () => {
-            const newLevel = parseInt(mathLevelSelect.value);
-            if (newLevel !== mathLevel) {
-                if (confirm(`수학 난이도를 레벨 ${newLevel}로 변경하시겠습니까?
-
-⚠️ 주의: 연속 정답 보너스가 초기화됩니다.`)) {
-                    mathLevel = newLevel;
-                    consecutiveCorrectMath = 0;
-                    prefetchedMathProblem = null;
-                    saveAllData();
-                    alert(`수학 레벨이 ${newLevel}로 변경되었습니다!`);
-                    updateHomeScreenUI();
-                } else {
-                    mathLevelSelect.value = mathLevel.toString();
-                }
-            }
-        });
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                const nextButton = actionButtons.querySelector('#next-problem');
-                if (nextButton) nextButton.click();
-            }
-        });
-
-        // 페이지 종료 시 자동 저장
-        window.addEventListener('beforeunload', () => {
-            saveAllData();
-        });
-
-        // 주기적 자동 저장 (30초마다)
-        setInterval(() => {
-            if (currentSessionType) {
-                saveAllData();
-                console.log('자동 저장 실행:', new Date().toLocaleString());
-            }
-        }, 30000);
-
-        // 페이지 가시성 변경 시 저장 (탭 전환, 최소화 등)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                saveAllData();
-                console.log('페이지 숨김 - 자동 저장');
-            }
-        });
-
-        // 앱 시작
-        initializeApp();
-        
-        // 앱 시작 시 첫 문제들 미리 준비
-        setTimeout(() => {
-            prefetchInitialProblems();
-        }, 1000);
-        
-        // Show version info
-        console.log('유라는 지혜의 숲 v2.6 - Final Bug Fixes');
     </script>
 </body>
 </html>
