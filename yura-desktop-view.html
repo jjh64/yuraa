@@ -2211,7 +2211,7 @@
                 return;
             }
             
-            if (confirm('⚠️ 관리자 권한 확인됨\n\n정말로 모든 학습 통계를 초기화하시겠습니까?\n\n📊 삭제될 데이터:\n- 모든 과목별 통계\n- 정답률 기록\n- 문제별 시도 횟수\n\n🚨 이 작업은 되돌릴 수 없습니다!')) {
+            if (confirm('⚠️ 관리자 권한 확인됨\n\n정말로 모든 통계를 초기화하시겠습니까?\n\n📊 삭제될 데이터:\n- 모든 과목별 통계\n- 정답률 기록\n- 문제별 시도 횟수\n\n🚨 이 작업은 되돌릴 수 없습니다!')) {
                 initializeStats();
                 saveAllData();
                 renderStats();
@@ -2224,6 +2224,26 @@
         closeSolutionOverlay.addEventListener('click', () => solutionOverlay.classList.add('hidden'));
 
         feedbackOverlay.addEventListener('click', () => feedbackOverlay.classList.add('hidden'));
+
+        // Week setup modal buttons
+        if (startNewWeekButton) {
+            startNewWeekButton.addEventListener('click', () => {
+                openWeekSetupModal('이번 주 보상을 설정하세요!');
+            });
+        }
+        if (saveWeekButton) {
+            saveWeekButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                saveWeeklyGoals();
+            });
+        }
+        if (cancelWeekButton) {
+            cancelWeekButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('modal-message').textContent = '';
+                weekSetupModal.classList.add('hidden');
+            });
+        }
 
         loginButton.addEventListener('click', () => {
             const correctPassword = decryptValue(ENCRYPTED_LOGIN_PASSWORD);
