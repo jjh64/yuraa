@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>유라는 지혜의 숲 🌳</title>
+    <title>유라의 지혜의 숲</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="roopy_succ.jpeg">
     <link rel="icon" href="roopy_succ.jpeg">
@@ -75,7 +75,7 @@
             
             #home-screen main {
                 display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important; /* 3열(윗줄 3개 + 아랫줄 3개) */
+                grid-template-columns: repeat(5, 1fr) !important; /* 홈 화면을 항상 5열로 고정 */
                 gap: 1.5rem !important;
             }
             
@@ -110,8 +110,6 @@
             /* 문제 표시 영역 높이 고정 */
             #problem-container {
                 min-height: 20rem !important;
-                max-height: 70vh;
-                overflow-y: auto;
             }
             
             /* 입력 필드 폰트 크기 고정 (iOS 줌 방지) */
@@ -127,14 +125,9 @@
             .modal-grid, 
             #reward-inputs > div {
                 display: grid !important;
-                grid-template-columns: repeat(4, 1fr) !important; /* 보상 설정 그리드를 4열(보상 / 영어 / 한글 / 수학)로 고정 */
-                gap: 0.75rem !important;
+                grid-template-columns: repeat(3, 1fr) !important; /* 보상 설정 그리드를 3열로 고정 */
+                gap: 1rem !important;
             }
-
-            /* 보상 설정 영역: 라벨 줄바꿈 방지 및 입력 크기 조정 */
-            #week-setup-modal label { white-space: nowrap; }
-            #week-setup-modal .reward-desc { width: 100%; }
-            #week-setup-modal input[type=number] { width: 100%; }
             
             #problem-container .grid,
             .options-grid {
@@ -158,12 +151,9 @@
             @apply text-2xl font-bold text-gray-700;
         }
         .english-question-text {
-            font-size: 1rem !important;  /* Standard readable size (16px) */
-            line-height: 1.5rem !important;
+            font-size: 1.5rem !important;
+            line-height: 2rem !important;
             text-align: left;
-            max-height: 50vh;
-            overflow-y: auto;
-            padding-right: 0.5rem;
         }
         .btn {
             @apply px-6 py-2 rounded-lg font-bold text-white transition-colors duration-300 disabled:bg-gray-400;
@@ -173,12 +163,6 @@
         .btn-gray { @apply bg-gray-500 hover:bg-gray-600; }
         .btn-orange { @apply bg-orange-500 hover:bg-orange-600; }
         .btn-red { @apply bg-red-500 hover:bg-red-600; }
-        .btn-purple { @apply bg-purple-500 hover:bg-purple-600; }
-        
-        /* New button styles for problem navigation */
-        .btn-next { @apply bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg; }
-        .btn-save { @apply bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold shadow-lg; }
-        .btn-solution { @apply bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg; }
         
         .loader {
             border: 8px solid #f3f3f3;
@@ -205,7 +189,7 @@
 
         <div id="login-screen">
              <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
-                <h1 class="text-4xl font-bold text-gray-800 mb-2">유라는 지혜의 숲 🌳</h1>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">유라의 지혜의 숲 🌳</h1>
                 <p class="text-lg text-gray-600 mb-8">비밀번호를 입력하고 모험을 시작해봐요!</p>
                 <div class="max-w-sm mx-auto">
                     <input type="password" id="password-input" class="w-full p-3 border-2 rounded-lg text-center text-xl mb-4" placeholder="비밀번호">
@@ -243,7 +227,7 @@
                         <option value="2">레벨 2</option>
                         <option value="3">레벨 3</option>
                         <option value="4">레벨 4</option>
-                        <option value="5" selected>레벨 5 (FAST ELA)</option>
+                        <option value="5">레벨 5</option>
                     </select>
                     <label class="font-bold text-gray-700">수학 난이도:</label>
                     <select id="math-level-select" class="px-3 py-1 border-2 rounded-lg font-bold">
@@ -269,18 +253,18 @@
             </div>
 
 
-            <main class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+            <main class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-8">
                 <div id="start-english" class="main-button">
-                    <div class="subject-icon">EN</div>
-                    <div class="subject-title">영어</div>
+                    <div class="subject-icon">🇺🇸</div>
+                    <div class="subject-title">AI 영어 공부</div>
                 </div>
                 <div id="start-korean" class="main-button">
                     <div class="subject-icon">📝</div>
-                    <div class="subject-title">한글</div>
+                    <div class="subject-title">AI 한글 공부</div>
                 </div>
                 <div id="start-math" class="main-button">
                     <div class="subject-icon">🧮</div>
-                    <div class="subject-title">수학</div>
+                    <div class="subject-title">AI 수학 공부</div>
                 </div>
                  <div id="start-review" class="main-button">
                     <div class="subject-icon">📖</div>
@@ -290,16 +274,12 @@
                     <div class="subject-icon">🔖</div>
                     <div class="subject-title">저장한 문제</div>
                 </div>
-                <div id="start-vocabulary" class="main-button">
-                    <div class="subject-icon">📚</div>
-                    <div class="subject-title">단어장</div>
-                </div>
             </main>
         </div>
 
-        <div id="learning-screen" class="hidden bg-white p-8 rounded-2xl shadow-lg relative max-h-[90vh] overflow-y-auto">
-            <div id="feedback-overlay" class="hidden absolute inset-0 bg-black bg-opacity-85 flex justify-center items-center z-10">
-                <div id="feedback-content" class="text-2xl font-bold text-center bg-white p-8 rounded-2xl shadow-2xl max-w-lg"></div>
+        <div id="learning-screen" class="hidden bg-white p-8 rounded-2xl shadow-lg relative">
+            <div id="feedback-overlay" class="hidden absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+                <div id="feedback-content" class="text-2xl font-bold text-center"></div>
             </div>
             <div id="solution-overlay" class="hidden absolute inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-8">
                 <div id="solution-content" class="bg-white p-8 rounded-lg shadow-xl text-lg text-gray-800 relative max-w-2xl w-full">
@@ -334,48 +314,6 @@
                 </div>
         </div>
 
-        <!-- Vocabulary Screen -->
-        <div id="vocabulary-screen" class="hidden bg-white p-8 rounded-2xl shadow-lg">
-            <div class="flex justify-between items-center border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-purple-600">📚 나의 단어장</h2>
-                <div class="flex items-center gap-4">
-                    <div class="text-lg">
-                        <span class="font-bold text-gray-600">총 단어:</span>
-                        <span id="total-words" class="text-purple-600 font-bold">0</span>
-                    </div>
-                    <button id="vocab-home-button" class="btn btn-gray">🏡 처음으로</button>
-                </div>
-            </div>
-            
-            <!-- Search and Filter -->
-            <div class="flex gap-4 mb-6">
-                <input type="text" id="vocab-search" placeholder="단어 검색..." 
-                       class="flex-1 p-3 border-2 rounded-lg text-lg">
-                <select id="vocab-filter" class="p-3 border-2 rounded-lg text-lg">
-                    <option value="all">모든 카테고리</option>
-                    <option value="Informational Text">Informational Text</option>
-                    <option value="Advanced Vocabulary">Advanced Vocabulary</option>
-                    <option value="Reading Across Genres">Reading Across Genres</option>
-                    <option value="Main Idea">Main Idea</option>
-                    <option value="Author's Purpose">Author's Purpose</option>
-                    <option value="Text Evidence">Text Evidence</option>
-                    <option value="Compare and Contrast">Compare and Contrast</option>
-                </select>
-            </div>
-            
-            <!-- Vocabulary Cards Container -->
-            <div id="vocabulary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
-                <!-- Cards will be inserted here -->
-            </div>
-            
-            <!-- Empty State -->
-            <div id="vocab-empty-state" class="hidden text-center py-12">
-                <div class="text-6xl mb-4">📝</div>
-                <p class="text-xl text-gray-600">아직 저장된 단어가 없어요!</p>
-                <p class="text-lg text-gray-500 mt-2">영어 문제를 풀면 자동으로 단어가 저장됩니다.</p>
-            </div>
-        </div>
-
     </div>
 
     <div id="week-setup-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
@@ -385,31 +323,50 @@
                 <p class="text-center text-gray-500 mb-4">영어, 한글, 수학 점수를 모두 넘어야 보상을 받을 수 있어요!</p>
                 <p id="modal-message" class="text-center text-red-500 mb-4 font-bold h-6"></p>
                 <div id="reward-inputs">
-                    <!-- Header row (desktop) -->
-                    <div class="hidden md:grid grid-cols-4 text-sm font-bold text-gray-600 mb-2 px-1">
-                        <div>보상 내용</div>
-                        <div class="text-center text-purple-600">영어 목표</div>
-                        <div class="text-center text-cyan-600">한글 목표</div>
-                        <div class="text-center text-yellow-600">수학 목표</div>
+                    <div class="modal-grid grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-4">
+                        <input type="text" placeholder="보상 내용 (예: 아이스크림)" class="reward-desc col-span-1 p-2 border-2 rounded-lg">
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-purple-600">영어</label>
+                           <input type="number" placeholder="목표" class="reward-goal-english w-full p-2 border-2 rounded-lg" value="100">
+                        </div>
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-cyan-600">한글</label>
+                           <input type="number" placeholder="목표" class="reward-goal-korean w-full p-2 border-2 rounded-lg" value="100">
+                        </div>
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-yellow-600">수학</label>
+                           <input type="number" placeholder="목표" class="reward-goal-math w-full p-2 border-2 rounded-lg" value="100">
+                        </div>
                     </div>
-                    <!-- Reward rows: 4 columns (desc / english / korean / math) -->
-                    <div class="modal-grid grid grid-cols-1 md:grid-cols-4 items-center mb-4">
-                        <input type="text" placeholder="보상 내용 (예: 냉장고를 부탁해 보기)" class="reward-desc p-2 border-2 rounded-lg" aria-label="보상 내용">
-                        <input type="number" placeholder="영어" class="reward-goal-english p-2 border-2 rounded-lg text-center" aria-label="영어 목표" value="300">
-                        <input type="number" placeholder="한글" class="reward-goal-korean p-2 border-2 rounded-lg text-center" aria-label="한글 목표" value="300">
-                        <input type="number" placeholder="수학" class="reward-goal-math p-2 border-2 rounded-lg text-center" aria-label="수학 목표" value="300">
+                     <div class="modal-grid grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-4">
+                        <input type="text" placeholder="보상 내용 (예: 영화 보기)" class="reward-desc col-span-1 p-2 border-2 rounded-lg">
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-purple-600">영어</label>
+                           <input type="number" placeholder="목표" class="reward-goal-english w-full p-2 border-2 rounded-lg" value="250">
+                        </div>
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-cyan-600">한글</label>
+                           <input type="number" placeholder="목표" class="reward-goal-korean w-full p-2 border-2 rounded-lg" value="250">
+                        </div>
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-yellow-600">수학</label>
+                           <input type="number" placeholder="목표" class="reward-goal-math w-full p-2 border-2 rounded-lg" value="250">
+                        </div>
                     </div>
-                    <div class="modal-grid grid grid-cols-1 md:grid-cols-4 items-center mb-4">
-                        <input type="text" placeholder="보상 내용 (예: 원하는 책 사기)" class="reward-desc p-2 border-2 rounded-lg" aria-label="보상 내용">
-                        <input type="number" placeholder="영어" class="reward-goal-english p-2 border-2 rounded-lg text-center" aria-label="영어 목표" value="500">
-                        <input type="number" placeholder="한글" class="reward-goal-korean p-2 border-2 rounded-lg text-center" aria-label="한글 목표" value="500">
-                        <input type="number" placeholder="수학" class="reward-goal-math p-2 border-2 rounded-lg text-center" aria-label="수학 목표" value="500">
-                    </div>
-                    <div class="modal-grid grid grid-cols-1 md:grid-cols-4 items-center mb-6">
-                        <input type="text" placeholder="보상 내용 (예: Roblox 1 hour)" class="reward-desc p-2 border-2 rounded-lg" aria-label="보상 내용">
-                        <input type="number" placeholder="영어" class="reward-goal-english p-2 border-2 rounded-lg text-center" aria-label="영어 목표" value="1000">
-                        <input type="number" placeholder="한글" class="reward-goal-korean p-2 border-2 rounded-lg text-center" aria-label="한글 목표" value="1000">
-                        <input type="number" placeholder="수학" class="reward-goal-math p-2 border-2 rounded-lg text-center" aria-label="수학 목표" value="1000">
+                     <div class="modal-grid grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-6">
+                        <input type="text" placeholder="보상 내용 (예: 원하는 책 사기)" class="reward-desc col-span-1 p-2 border-2 rounded-lg">
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-purple-600">영어</label>
+                           <input type="number" placeholder="목표" class="reward-goal-english w-full p-2 border-2 rounded-lg" value="500">
+                        </div>
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-cyan-600">한글</label>
+                           <input type="number" placeholder="목표" class="reward-goal-korean w-full p-2 border-2 rounded-lg" value="500">
+                        </div>
+                        <div class="flex items-center gap-2">
+                           <label class="font-bold text-yellow-600">수학</label>
+                           <input type="number" placeholder="목표" class="reward-goal-math w-full p-2 border-2 rounded-lg" value="500">
+                        </div>
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -454,16 +411,8 @@
         const startEnglishBtn = document.getElementById('start-english');
         const startKoreanBtn = document.getElementById('start-korean');
         const startMathBtn = document.getElementById('start-math');
-        const startReviewBtn = document.getElementById('start-review');
-        const startSavedBtn = document.getElementById('start-saved');
-        const startVocabularyBtn = document.getElementById('start-vocabulary');
-        const vocabularyScreen = document.getElementById('vocabulary-screen');
-        const vocabHomeButton = document.getElementById('vocab-home-button');
-        const vocabSearch = document.getElementById('vocab-search');
-        const vocabFilter = document.getElementById('vocab-filter');
-        const vocabularyContainer = document.getElementById('vocabulary-container');
-        const totalWordsSpan = document.getElementById('total-words');
-        const vocabEmptyState = document.getElementById('vocab-empty-state');
+    const startReviewBtn = document.getElementById('start-review');
+    const startSavedBtn = document.getElementById('start-saved');
         const homeButton = document.getElementById('home-button');
         const statsButton = document.getElementById('stats-button');
         const subjectHeader = document.getElementById('subject-header');
@@ -497,7 +446,8 @@
         const mathLevelSelect = document.getElementById('math-level-select');
         const homeStatsButton = document.getElementById('home-stats-button');
 
-        // 상태 변수
+        // 상태 변수 - 암호화된 값들
+        // 암호화된 비밀번호들 (XOR + Base64 인코딩)
         const ENCRYPTED_LOGIN_PASSWORD = "U1hAT0VEGBs="; // yrjeon21 encrypted
         const ENCRYPTED_ADMIN_PASSWORD = "fUBZTkhMQQsY"; // Wjsdbfk!2 encrypted  
         const ENCRYPTED_API_KEY = "a2NQS3lTa3gfRmBYEkBhX19aZlhZH1MeRBxYTGt8eBlOXERZGXAe"; // API key encrypted
@@ -516,17 +466,19 @@
         let weekStartDate;
         let weeklyRewards;
         
-        let mistakes;
-        let savedProblems;
+    let mistakes;
+    let savedProblems;
         let stats;
-        let vocabulary = [];
         let currentMistakeIndex = 0;
-        let currentSavedIndex = 0;
+    let currentSavedIndex = 0;
         
+        // Initialize save system
         const saveSystem = new YuraSaveSystem();
         
+        // 변수 초기화 함수 - 기본값으로만 초기화
         function initializeVariables() {
-            if (englishLevel === undefined) englishLevel = 5;
+            // 초기화 시에만 기본값 설정
+            if (englishLevel === undefined) englishLevel = 1;
             if (mathLevel === undefined) mathLevel = 1;
             if (consecutiveCorrectEnglish === undefined) consecutiveCorrectEnglish = 0;
             if (consecutiveCorrectMath === undefined) consecutiveCorrectMath = 0;
@@ -540,9 +492,28 @@
             if (mistakes === undefined) mistakes = [];
             if (savedProblems === undefined) savedProblems = [];
             if (stats === undefined) stats = {};
-            if (vocabulary === undefined) vocabulary = [];
         }
 
+        // 저장 키 상수 정의
+        const STORAGE_KEYS = {
+            WEEK_START: 'learningApp_weekStartDate',
+            MISTAKES: 'learningApp_mistakes',
+            STATS: 'learningApp_stats',
+            ENGLISH_LEVEL: 'learningApp_englishLevel',
+            MATH_LEVEL: 'learningApp_mathLevel',
+            CONSECUTIVE_ENGLISH: 'learningApp_consecutiveEnglish',
+            CONSECUTIVE_KOREAN: 'learningApp_consecutiveKorean',
+            CONSECUTIVE_MATH: 'learningApp_consecutiveMath',
+            WEEKLY_REWARDS: 'learningApp_weeklyRewards',
+            WEEKLY_SCORE: 'learningApp_weeklyScore',
+            WEEKLY_ENGLISH_SCORE: 'learningApp_weeklyEnglishScore',
+            WEEKLY_KOREAN_SCORE: 'learningApp_weeklyKoreanScore',
+            WEEKLY_MATH_SCORE: 'learningApp_weeklyMathScore',
+            LAST_SAVE: 'learningApp_lastSave',
+            SESSION_COUNT: 'learningApp_sessionCount'
+        };
+
+        // --- 데이터 저장 및 복원 함수 ---
         function saveAllData() {
             try {
                 const dataToSave = {
@@ -559,34 +530,62 @@
                     consecutiveCorrectMath,
                     mistakes,
                     savedProblems,
-                    stats,
-                    vocabulary
+                    stats
                 };
+
+                // Use new save system
                 saveSystem.saveToFile(dataToSave);
+                
                 showSaveIndicator();
                 updateLastSaveTime();
+                console.log('데이터 저장 완료:', new Date().toLocaleString());
                 return true;
             } catch (e) {
                 console.error('데이터 저장 실패:', e);
+                alert('데이터 저장에 실패했습니다.');
                 return false;
             }
         }
 
         function loadAllData() {
             try {
+                console.log('데이터 로드 시작...');
+                
+                // 먼저 변수들을 초기화 (undefined 체크로 기본값 설정)
                 initializeVariables();
+                
+                // Load data using new save system
                 const savedData = saveSystem.loadLatestData();
+                
                 if (!savedData) {
+                    console.log('저장된 데이터 없음 - 기본값 사용');
+                    // Initialize with defaults
+                    englishLevel = 1;
+                    mathLevel = 1;
+                    consecutiveCorrectEnglish = 0;
+                    consecutiveCorrectMath = 0;
+                    consecutiveCorrectKorean = 0;
+                    weeklyScore = 0;
+                    weeklyEnglishScore = 0;
+                    weeklyKoreanScore = 0;
+                    weeklyMathScore = 0;
+                    weekStartDate = null;
+                    weeklyRewards = [];
+                    mistakes = [];
                     initializeStats();
                     return;
                 }
+                
+                // Restore data from saved file
+                console.log('데이터 복원 중...');
+                
                 weekStartDate = savedData.weekStartDate;
                 weeklyRewards = savedData.weeklyRewards || [];
                 weeklyScore = savedData.weeklyScore || 0;
                 weeklyEnglishScore = savedData.weeklyEnglishScore || 0;
                 weeklyKoreanScore = savedData.weeklyKoreanScore || 0;
                 weeklyMathScore = savedData.weeklyMathScore || 0;
-                englishLevel = savedData.englishLevel || 5;
+                englishLevel = savedData.englishLevel || 1;
                 mathLevel = savedData.mathLevel || 1;
                 consecutiveCorrectEnglish = savedData.consecutiveCorrectEnglish || 0;
                 consecutiveCorrectKorean = savedData.consecutiveCorrectKorean || 0;
@@ -594,15 +593,48 @@
                 mistakes = savedData.mistakes || [];
                 savedProblems = savedData.savedProblems || [];
                 stats = savedData.stats || saveSystem.getDefaultStats();
-                vocabulary = savedData.vocabulary || [];
-                if (englishLevelSelect) englishLevelSelect.value = englishLevel.toString();
-                if (mathLevelSelect) mathLevelSelect.value = mathLevel.toString();
+                
+                // Update level selectors
+                if (englishLevelSelect) {
+                    englishLevelSelect.value = englishLevel.toString();
+                }
+                if (mathLevelSelect) {
+                    mathLevelSelect.value = mathLevel.toString();
+                }
+                
                 updateLastSaveTime();
+                
+                console.log('데이터 로드 완료:', {
+                    주간점수: weeklyScore,
+                    영어점수: weeklyEnglishScore,
+                    한글점수: weeklyKoreanScore,
+                    수학점수: weeklyMathScore,
+                    영어레벨: englishLevel,
+                    수학레벨: mathLevel,
+                    오답수: mistakes.length,
+                    보상수: weeklyRewards.length
+                });
             } catch (e) {
                 console.error('데이터 로드 실패:', e);
-                initializeVariables();
-                initializeStats();
+                // 오류 발생 시 강제 초기화
+                englishLevel = 1;
+                mathLevel = 1;
+                consecutiveCorrectEnglish = 0;
+                consecutiveCorrectMath = 0;
+                consecutiveCorrectKorean = 0;
+                weeklyScore = 0;
+                weeklyEnglishScore = 0;
+                weeklyKoreanScore = 0;
+                weeklyMathScore = 0;
+                weekStartDate = null;
+                weeklyRewards = [];
+                mistakes = [];
+                stats = saveSystem.getDefaultStats();
             }
+        }
+
+        function clearAllData() {
+            saveSystem.clearAllData();
         }
 
         function showNotification(message) {
@@ -610,80 +642,101 @@
             notification.className = 'fixed top-20 right-4 bg-blue-100 border border-blue-400 text-blue-700 px-6 py-3 rounded-lg shadow-lg z-50';
             notification.textContent = message;
             document.body.appendChild(notification);
-            setTimeout(() => { notification.remove(); }, 3000);
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
 
         function showSaveIndicator() {
             saveIndicator.classList.remove('hidden');
-            setTimeout(() => { saveIndicator.classList.add('hidden'); }, 2000);
+            setTimeout(() => {
+                saveIndicator.classList.add('hidden');
+            }, 2000);
         }
 
         function updateLastSaveTime() {
             const fullData = saveSystem.loadFromLocalStorage();
             if (fullData && fullData.lastUpdated) {
-                lastSaveTime.textContent = `마지막 저장: ${new Date(fullData.lastUpdated).toLocaleString('ko-KR')}`;
+                const date = new Date(fullData.lastUpdated);
+                lastSaveTime.textContent = `마지막 저장: ${date.toLocaleString('ko-KR')}`;
             }
         }
 
+        // 첫 문제들 미리 생성
         async function prefetchInitialProblems() {
-            fetchProblem('english', englishLevel).then(p => { prefetchedEnglishProblem = p; }).catch(err => console.error('영어 문제 미리 생성 실패:', err));
-            fetchProblem('korean', mathLevel).then(p => { prefetchedKoreanProblem = p; }).catch(err => console.error('한글 문제 미리 생성 실패:', err));
-            fetchProblem('math', mathLevel).then(p => { prefetchedMathProblem = p; }).catch(err => console.error('수학 문제 미리 생성 실패:', err));
+            console.log('초기 문제 미리 생성 시작...');
+            
+            // 영어 문제 미리 생성
+            fetchProblem('english', englishLevel).then(p => {
+                prefetchedEnglishProblem = p;
+                console.log('영어 문제 미리 생성 완료');
+            }).catch(err => {
+                console.error('영어 문제 미리 생성 실패:', err);
+            });
+            
+            // 한글 문제 미리 생성
+            fetchProblem('korean', mathLevel).then(p => {
+                prefetchedKoreanProblem = p;
+                console.log('한글 문제 미리 생성 완료');
+            }).catch(err => {
+                console.error('한글 문제 미리 생성 실패:', err);
+            });
+            
+            // 수학 문제 미리 생성
+            fetchProblem('math', mathLevel).then(p => {
+                prefetchedMathProblem = p;
+                console.log('수학 문제 미리 생성 완료');
+            }).catch(err => {
+                console.error('수학 문제 미리 생성 실패:', err);
+            });
         }
 
+        // --- AI 문제 생성 로직 (Gemini API) ---
         function getAdaptivePrompt(subject, level) {
             if (subject === 'english') {
-                const categoriesByLevel = {
-                    1: ['Vocabulary', 'Main Idea'],
-                    2: ['Vocabulary', 'Main Idea', 'Advanced Vocabulary'],
-                    3: ['Advanced Vocabulary', 'Main Idea', 'Text Evidence'],
-                    4: ['Advanced Vocabulary', 'Main Idea', 'Text Evidence', 'Author\'s Purpose'],
-                    5: ['Informational Text','Informational Text','Reading Across Genres','Reading Across Genres','Advanced Vocabulary','Advanced Vocabulary','Main Idea','Author\'s Purpose','Text Evidence','Compare and Contrast']
-                };
-                const categories = categoriesByLevel[level] || categoriesByLevel[5];
+                const categories = ['Vocabulary', 'Main Idea'];
                 const category = categories[Math.floor(Math.random() * categories.length)];
                 console.log(`선택된 영어 분야: ${category}`);
-                if (category === 'Informational Text') {
-                    return `You are an English teacher preparing a student for FAST ELA Level ${level}. Create one multiple-choice reading comprehension question based on an informational text passage. Level requirements: ${level === 5 ? 'Use complex sentence structures, advanced vocabulary (grade 5-6), and sophisticated topics' : level === 4 ? 'Use moderate complexity with grade 4 vocabulary' : level === 3 ? 'Use simple sentences with grade 3 vocabulary' : 'Use basic sentences with grade 2 vocabulary'}. The passage should be about science, history, or technology. ${level === 5 ? 'Include a 7-10 sentence passage with rich detail, multiple paragraphs allowed, complex ideas, and advanced vocabulary' : level >= 4 ? 'Include a 5-7 sentence passage' : 'Include a 3-4 sentence passage'}. Ask about key details, cause and effect, or text structure. Provide the response in a single JSON object with keys: "q" (passage + question), "options" (array of 4 strings), "a" (the correct answer), "category", "solution" (explanation), and "vocabulary" (array of 3-5 important words from the passage with format: [{"word": "example", "korean": "예시", "definition": "a sample or model", "example": "This is an example sentence."}]).`;
-                } else if (category === 'Reading Across Genres') {
-                    return `You are an English teacher preparing a student for FAST ELA Level 5. Create one multiple-choice question that compares different text genres. Present two text excerpts (3-5 sentences each) from different genres (e.g., fiction vs. non-fiction, poetry vs. informational, narrative vs. persuasive). Use rich, detailed language appropriate for grade 5 readers. Ask about genre characteristics, author's purpose, or how information is presented differently. Provide the response in a single JSON object with keys: "q" (excerpts + question), "options" (array of 4 strings), "a" (the correct answer), "category", and "solution" (explanation of genre differences).`;
-                } else if (category === 'Advanced Vocabulary') {
-                    return `You are an English teacher preparing a student for FAST ELA Level ${level}. Create one multiple-choice vocabulary question. Level requirements: ${level === 5 ? 'Use academic and domain-specific words (grade 5-6 level)' : level === 4 ? 'Use grade 4 vocabulary' : level === 3 ? 'Use grade 3 vocabulary' : 'Use basic grade 2 vocabulary'}. Present the word in a meaningful context sentence, then ask about its meaning, synonym, antonym, or usage. Focus on words commonly found in science, social studies, or literature texts. Provide the response in a single JSON object with keys: "q" (context sentence + question), "options" (array of 4 strings), "a" (the correct answer), "category", "solution" (explanation), and "vocabulary" (array with the target word and 2-3 related words: [{"word": "example", "korean": "예시", "definition": "a sample or model", "example": "This is an example sentence."}]).`;
-                } else if (category === 'Author\'s Purpose') {
-                    return `You are an English teacher preparing a student for FAST ELA Level 5. Create one multiple-choice question about author's purpose. Present a detailed passage (5-7 sentences) with clear purpose and sophisticated language appropriate for grade 5. Ask why the author wrote it (to inform, persuade, entertain, or explain). Provide the response in a single JSON object with keys: "q" (passage + question), "options" (array of 4 strings), "a" (the correct answer), "category", and "solution" (explanation with text evidence).`;
-                } else if (category === 'Text Evidence') {
-                    return `You are an English teacher preparing a student for FAST ELA Level 5. Create one multiple-choice question requiring students to cite text evidence. Present a substantive passage (6-8 sentences) with multiple details and complex ideas. Ask which sentence or detail best supports a given statement or conclusion. Provide the response in a single JSON object with keys: "q" (passage + question), "options" (array of 4 strings), "a" (the correct answer), "category", and "solution" (explanation of why that evidence is strongest).`;
-                } else if (category === 'Compare and Contrast') {
-                    return `You are an English teacher preparing a student for FAST ELA Level 5. Create one multiple-choice question about comparing and contrasting. Present detailed information about two related topics, characters, or ideas (6-8 sentences total, with rich descriptions and multiple points of comparison). Ask about similarities or differences. Provide the response in a single JSON object with keys: "q" (comparison text + question), "options" (array of 4 strings), "a" (the correct answer), "category", and "solution" (explanation of the comparison).`;
-                } else {
-                    return `You are an English teacher preparing a student for FAST ELA Level ${level}. Create one multiple-choice question about the main idea. Level requirements: ${level === 5 ? 'Use complex paragraphs with advanced vocabulary' : level === 4 ? 'Use moderate complexity' : level === 3 ? 'Use simple paragraphs' : 'Use basic paragraphs'}. Present a detailed paragraph (${level === 5 ? '7-9' : level >= 4 ? '5-6' : '3-4'} sentences) about a topic appropriate for the reading level. ${level === 5 ? 'Include supporting details, examples, and sophisticated vocabulary.' : ''} Ask for the main idea or best summary. Provide the response in a single JSON object with keys: "q" (paragraph + question), "options" (array of 4 strings), "a" (the correct answer), "category", "solution" (explanation), and "vocabulary" (array of 3-5 key words: [{"word": "example", "korean": "예시", "definition": "a sample or model", "example": "This is an example sentence."}]).`;
-                }
+                return `You are an English teacher for a 10-year-old student who has studied in the US. Create one multiple-choice English question about '${category}'. The question should be suitable for a 4th grader. Provide the response in a single JSON object with keys: "q" (English question), "options" (array of 4 strings), "a" (the correct answer), "category", and "solution" (short English explanation why the answer is correct). Ensure options are plausible and creative. For 'Main Idea' questions, provide a short paragraph as the question.`;
             } else if (subject === 'korean') {
                 const categories = ['맞춤법', '속담', '어휘'];
                 let weightedCategories = [];
+
                 categories.forEach(cat => {
                     const stat = stats.korean[cat];
                     let weight;
-                    if (!stat || stat.attempted < 3) weight = 3;
-                    else {
+                    if (!stat || stat.attempted < 3) {
+                        weight = 3; // Give a neutral weight if not enough data
+                    } else {
                         const accuracy = (stat.correct / stat.attempted) * 100;
+                        // Lower accuracy = higher weight. Weight between 1 and 10.
                         weight = Math.round(Math.max(1, (105 - accuracy) / 10));
                     }
-                    for (let i = 0; i < weight; i++) weightedCategories.push(cat);
+                    for (let i = 0; i < weight; i++) {
+                        weightedCategories.push(cat);
+                    }
                 });
+
                 if (weightedCategories.length === 0) weightedCategories = categories;
+
                 const category = weightedCategories[Math.floor(Math.random() * weightedCategories.length)];
+                console.log(`선택된 한글 분야 (가중치 적용): ${category}`);
                 return `You are a Korean language teacher for a 10-year-old student in Korea. Create one multiple-choice Korean language question about '${category}'. The question should be suitable for a 4th grader. Avoid overly common proverbs like '티끌 모아 태산'. Provide the response in a single JSON object with keys: "q" (Korean question), "options" (array of 4 strings), "a" (the correct answer), "category", and "solution" (short Korean explanation why the answer is correct). Ensure options are plausible and creative.`;
             } else { // math
                 return `You are a math teacher for a 10-year-old Korean 4th grade student. Create one math problem for difficulty level ${level} out of 10. Provide the response in a single JSON object with keys: "q_ko" (Korean question), "q_en" (English translation), "a" (numerical answer), "options" (array of 4 plausible numbers), and "solution" (short Korean explanation with steps).`;
             }
         }
         
+        // 🔐 보안 암호화 해독 함수
+        // XOR + Base64 암호화 방식 사용 (민감 정보 보호)
         function decryptValue(encrypted) {
             try {
+                // Base64 디코딩 후 XOR 해독
                 const decoded = atob(encrypted);
                 let result = '';
-                for (let i = 0; i < decoded.length; i++) result += String.fromCharCode(decoded.charCodeAt(i) ^ 42);
+                for (let i = 0; i < decoded.length; i++) {
+                    result += String.fromCharCode(decoded.charCodeAt(i) ^ 42); // XOR with security key
+                }
                 return result;
             } catch (e) {
                 console.error('🚨 Security decryption failed:', e);
@@ -692,21 +745,16 @@
         }
         
         async function fetchProblem(subject, level) {
-            console.log(`Fetching problem for subject: ${subject}, level: ${level}`);
             const apiKey = decryptValue(ENCRYPTED_API_KEY);
             if (!apiKey) {
-                console.error("API Key decryption failed.");
-                return { error: "API 키 디코딩 실패.<br>개발자에게 문의해주세요." };
+                 return { error: "API 키 디코딩 실패.<br>개발자에게 문의해주세요." };
             }
-            console.log("API Key decrypted successfully.");
 
             const prompt = getAdaptivePrompt(subject, level);
-            console.log("Generated prompt:", prompt);
+            console.log("Generated Prompt:", prompt);
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            console.log("API URL:", apiUrl);
 
             try {
-                console.log("Sending fetch request to API...");
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -715,36 +763,27 @@
                         generationConfig: { responseMimeType: "application/json" }
                     })
                 });
-                console.log("Received response from API. Status:", response.status);
-
                 if (!response.ok) {
-                    console.error("API response was not OK.", response);
-                    const errorText = await response.text();
-                    console.error("API error response body:", errorText);
-                    throw new Error(`API call failed: ${response.status}. ${errorText}`);
+                    const errorBody = await response.json();
+                    console.error('API Error Body:', errorBody);
+                    throw new Error(`API call failed with status: ${response.status}. ${errorBody?.error?.message || ''}`);
                 }
-
                 const result = await response.json();
-                console.log("API JSON response:", result);
-
-                if (!result.candidates || result.candidates.length === 0) {
-                    console.error("API response is missing 'candidates'.", result);
-                    throw new Error("Invalid API response format: no candidates.");
-                }
-
+                console.log("API Raw Response:", result);
                 const jsonText = result.candidates[0].content.parts[0].text;
-                console.log("Extracted JSON text from API response:", jsonText);
-
                 const problem = JSON.parse(jsonText);
-                console.log("Successfully parsed problem JSON.", problem);
-
                 problem.isKorean = subject === 'korean';
                 problem.isEnglish = subject === 'english';
                 
+                // Ensure answer format consistency
                 if (subject === 'korean' || subject === 'english') {
+                    // Normalize Korean answers
                     if (problem.a) problem.a = problem.a.toString().trim().normalize('NFC');
-                    if (problem.options) problem.options = problem.options.map(opt => opt.toString().trim().normalize('NFC'));
+                    if (problem.options) {
+                        problem.options = problem.options.map(opt => opt.toString().trim().normalize('NFC'));
+                    }
                 } else { // math
+                    // Ensure math answers are numbers
                     if (problem.a !== undefined) {
                         const numAnswer = parseFloat(problem.a);
                         if (!isNaN(numAnswer)) problem.a = numAnswer;
@@ -756,9 +795,17 @@
                         });
                     }
                 }
+                
+                console.log('Generated problem:', {
+                    subject,
+                    question: problem.q_ko || problem.q,
+                    answer: problem.a,
+                    options: problem.options
+                });
+                
                 return problem;
             } catch (error) {
-                console.error("AI Generation Error (in catch block):", error);
+                console.error("AI Generation Error:", error);
                 return { error: `문제 생성에 실패했어요. 잠시 후 다시 시도해주세요. (오류: ${error.message})` };
             }
         }
@@ -766,10 +813,14 @@
         async function loadProblem() {
             if (isFetching) return;
             isFetching = true;
+
             problemContainer.innerHTML = `<div class="text-center"><div class="loader"></div><p class="text-gray-600">AI가 새로운 문제를 만들고 있어요...</p></div>`;
             currentProblemScoreContainer.innerHTML = '';
             actionButtons.innerHTML = '';
+
             let problemToRender = null;
+            
+            // 현재 세션에 맞는 예비 문제 사용
             if (currentSessionType === 'english') {
                 problemToRender = prefetchedEnglishProblem;
                 prefetchedEnglishProblem = null;
@@ -780,21 +831,32 @@
                 problemToRender = prefetchedMathProblem;
                 prefetchedMathProblem = null;
             }
+
             if (!problemToRender) {
                 problemToRender = await fetchProblem(currentSessionType, currentSessionType === 'english' ? englishLevel : mathLevel);
             }
-            if (currentSessionType === 'english') fetchProblem('english', englishLevel).then(p => { prefetchedEnglishProblem = p; });
-            else if (currentSessionType === 'korean') fetchProblem('korean', mathLevel).then(p => { prefetchedKoreanProblem = p; });
-            else if (currentSessionType === 'math') fetchProblem('math', mathLevel).then(p => { prefetchedMathProblem = p; });
+            
+            // 다음 문제 미리 준비
+            if (currentSessionType === 'english') {
+                fetchProblem('english', englishLevel).then(p => { prefetchedEnglishProblem = p; });
+            } else if (currentSessionType === 'korean') {
+                fetchProblem('korean', mathLevel).then(p => { prefetchedKoreanProblem = p; });
+            } else if (currentSessionType === 'math') {
+                fetchProblem('math', mathLevel).then(p => { prefetchedMathProblem = p; });
+            }
 
             if (problemToRender && !problemToRender.error) {
                 currentProblem = problemToRender;
-                if (currentProblem.isEnglish) renderEnglishProblem(currentProblem);
-                else if (currentProblem.isKorean) renderKoreanProblem(currentProblem);
-                else renderMathProblem(currentProblem);
+                if (currentProblem.isEnglish) {
+                    renderEnglishProblem(currentProblem);
+                } else if (currentProblem.isKorean) {
+                    renderKoreanProblem(currentProblem);
+                } else {
+                    renderMathProblem(currentProblem);
+                }
             } else {
-                problemContainer.innerHTML = `<p class="text-red-500 text-center">${(problemToRender && problemToRender.error) || "알 수 없는 오류."}</p>`;
-                if (!problemToRender || !problemToRender.error || !problemToRender.error.includes("API 키")) {
+                problemContainer.innerHTML = `<p class="text-red-500 text-center">${problemToRender.error || "알 수 없는 오류가 발생했습니다."}</p>`;
+                if (!problemToRender.error.includes("API 키")) {
                     actionButtons.innerHTML = `<button id="retry-generation" class="btn btn-blue">다시 시도</button>`;
                     document.getElementById('retry-generation').onclick = loadProblem;
                 }
@@ -802,24 +864,53 @@
             isFetching = false;
         }
 
+        // --- 핵심 로직: 주간 목표 및 점수 관리 ---
         function initializeApp() {
+            console.log('앱 초기화 시작');
+            
+            // 데이터 로드 (내부에서 initializeVariables 호출됨)
             loadAllData();
-            if (localStorage.getItem('learningApp_isLoggedIn') === 'true') {
+            
+            // 로그인 상태 확인 - localStorage 사용으로 변경
+            const isLoggedIn = localStorage.getItem('learningApp_isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                console.log('자동 로그인 - 데이터 복원 완료');
+                console.log('현재 상태:', {
+                    주간점수: weeklyScore,
+                    영어점수: weeklyEnglishScore,
+                    한글점수: weeklyKoreanScore,
+                    수학점수: weeklyMathScore,
+                    영어레벨: englishLevel,
+                    수학레벨: mathLevel,
+                    오답수: mistakes ? mistakes.length : 0
+                });
+                // 로그인 상태면 홈 화면 표시하고 UI 업데이트
                 showHomeScreen();
+                updateHomeScreenUI();
+            } else {
+                console.log('로그인 필요');
             }
         }
 
         function initializeStats() {
             stats = saveSystem.getDefaultStats();
-            if (!stats.english) stats.english = {};
+            if (!stats.english) {
+                stats.english = {};
+            }
         }
 
         function addScore(points, subject) {
+            // Don't add scores for review or saved problem sessions
             if (currentSessionType !== 'review' && currentSessionType !== 'saved') {
                 weeklyScore = Math.max(0, weeklyScore + points);
-                if (subject === 'english') weeklyEnglishScore = Math.max(0, weeklyEnglishScore + points);
-                else if (subject === 'korean') weeklyKoreanScore = Math.max(0, weeklyKoreanScore + points);
-                else weeklyMathScore = Math.max(0, weeklyMathScore + points);
+                if (subject === 'english') {
+                    weeklyEnglishScore = Math.max(0, weeklyEnglishScore + points);
+                } else if (subject === 'korean') {
+                    weeklyKoreanScore = Math.max(0, weeklyKoreanScore + points);
+                } else { 
+                     weeklyMathScore = Math.max(0, weeklyMathScore + points);
+                }
+                
                 saveAllData();
                 updateHomeScreenUI();
                 updateLearningScreenScoresDisplay();
@@ -830,7 +921,7 @@
             document.getElementById('modal-message').textContent = message;
             weekSetupModal.querySelectorAll('.reward-desc').forEach(input => input.value = '');
             const goalInputs = weekSetupModal.querySelectorAll('.reward-goal-english, .reward-goal-korean, .reward-goal-math');
-            const defaultGoals = [300, 500, 1000];
+            const defaultGoals = [100, 250, 500];
             goalInputs.forEach((input, index) => {
                  input.value = defaultGoals[Math.floor(index/3)];
             });
@@ -841,8 +932,9 @@
             const modalMessage = document.getElementById('modal-message');
             modalMessage.textContent = '';
             const newRewards = [];
-            const rewardDivs = document.querySelectorAll('#reward-inputs .modal-grid');
+            const rewardDivs = document.querySelectorAll('#reward-inputs > div');
             let isValid = true, hasInput = false;
+
             rewardDivs.forEach(div => {
                 const desc = div.querySelector('.reward-desc').value.trim();
                 const goal_en = div.querySelector('.reward-goal-english').value;
@@ -855,18 +947,41 @@
                     isValid = false;
                 }
             });
-            if (!isValid) { modalMessage.textContent = '모든 칸(보상, 영어, 한글, 수학)을 입력해주세요.'; return; }
-            if (!hasInput) { modalMessage.textContent = '하나 이상의 보상을 설정해야 합니다.'; return; }
+            if (!isValid) { 
+                modalMessage.textContent = '모든 칸(보상, 영어, 한글, 수학)을 입력해주세요.'; 
+                return; 
+            }
+            if (!hasInput) { 
+                modalMessage.textContent = '하나 이상의 보상을 설정해야 합니다.'; 
+                return; 
+            }
+            
+            // 새 주를 시작할 때만 점수 초기화 (주간 체크를 통해 판단)
+            const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+            const shouldResetScores = !weekStartDate || (Date.now() - weekStartDate > oneWeekInMs);
             
             weeklyRewards = newRewards;
             weekStartDate = Date.now();
-            weeklyScore = 0; weeklyEnglishScore = 0; weeklyKoreanScore = 0; weeklyMathScore = 0;
-            consecutiveCorrectEnglish = 0; consecutiveCorrectKorean = 0; consecutiveCorrectMath = 0;
+            
+            if (shouldResetScores) {
+                console.log('새 주 시작 - 점수 초기화');
+                weeklyScore = 0; 
+                weeklyEnglishScore = 0;
+                weeklyKoreanScore = 0; 
+                weeklyMathScore = 0;
+                consecutiveCorrectEnglish = 0;
+                consecutiveCorrectKorean = 0; 
+                consecutiveCorrectMath = 0;
+            } else {
+                console.log('보상만 업데이트 - 기존 점수 유지');
+            }
             
             if (saveAllData()) {
                 document.getElementById('week-setup-form').classList.add('hidden');
                 document.getElementById('week-setup-success').classList.remove('hidden');
+
                 updateHomeScreenUI();
+
                 setTimeout(() => {
                     weekSetupModal.classList.add('hidden');
                     document.getElementById('week-setup-form').classList.remove('hidden');
@@ -875,33 +990,51 @@
             }
         }
 
+        // --- UI 업데이트 함수 ---
         function updateHomeScreenUI() {
-            if (!homeScreen.classList.contains('hidden')) {
-                document.getElementById('weekly-score').textContent = weeklyScore;
-                subjectScoresHome.innerHTML = `<div class="text-sm"><span class="font-bold text-purple-600">영어</span> ${weeklyEnglishScore}점</div><div class="text-sm"><span class="font-bold text-cyan-600">한글</span> ${weeklyKoreanScore}점</div><div class="text-sm"><span class="font-bold text-yellow-600">수학</span> ${weeklyMathScore}점</div>`;
-                updateWeeklyGoalsDisplay();
-                updateWeekDurationDisplay();
-                if (englishLevelSelect) englishLevelSelect.value = englishLevel.toString();
-                if (mathLevelSelect) mathLevelSelect.value = mathLevel.toString();
+            document.getElementById('weekly-score').textContent = weeklyScore;
+            subjectScoresHome.innerHTML = `
+                <div class="text-sm"><span class="font-bold text-purple-600">영어</span> ${weeklyEnglishScore}점</div>
+                <div class="text-sm"><span class="font-bold text-cyan-600">한글</span> ${weeklyKoreanScore}점</div>
+                <div class="text-sm"><span class="font-bold text-yellow-600">수학</span> ${weeklyMathScore}점</div>`;
+            updateWeeklyGoalsDisplay();
+            updateWeekDurationDisplay();
+            
+            // Update level selectors
+            if (englishLevelSelect) {
+                englishLevelSelect.value = englishLevel.toString();
+            }
+            if (mathLevelSelect) {
+                mathLevelSelect.value = mathLevel.toString();
             }
         }
         
         function updateLearningScreenScoresDisplay() {
-            learningSubjectScores.innerHTML = `<div class="text-purple-500 bg-purple-100 px-4 py-1 rounded-full">영어: ${weeklyEnglishScore}점</div><div class="text-cyan-500 bg-cyan-100 px-4 py-1 rounded-full">한글: ${weeklyKoreanScore}점</div><div class="text-yellow-600 bg-yellow-100 px-4 py-1 rounded-full">수학: ${weeklyMathScore}점</div>`;
+            learningSubjectScores.innerHTML = `
+                <div class="text-purple-500 bg-purple-100 px-4 py-1 rounded-full">영어: ${weeklyEnglishScore}점</div>
+                <div class="text-cyan-500 bg-cyan-100 px-4 py-1 rounded-full">한글: ${weeklyKoreanScore}점</div>
+                <div class="text-yellow-600 bg-yellow-100 px-4 py-1 rounded-full">수학: ${weeklyMathScore}점</div>`;
         }
         
         function updateWeekDurationDisplay() {
             const display = document.getElementById('week-duration');
             const daysDisplay = document.getElementById('days-remaining');
+            
             if (weekStartDate) {
                 const startDate = new Date(weekStartDate);
-                const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                const endDate = new Date(weekStartDate + 7 * 24 * 60 * 60 * 1000);
                 const now = new Date();
                 const daysRemaining = Math.ceil((endDate - now) / (24 * 60 * 60 * 1000));
+                
                 display.textContent = `${startDate.toLocaleDateString()} ~ ${endDate.toLocaleDateString()}`;
-                if (daysRemaining > 0) daysDisplay.textContent = `${daysRemaining}일 남음`;
-                else if (daysRemaining === 0) daysDisplay.textContent = '오늘이 마지막 날!';
-                else daysDisplay.textContent = '기간 종료됨 - 새 주를 시작하세요!';
+                
+                if (daysRemaining > 0) {
+                    daysDisplay.textContent = `${daysRemaining}일 남음`;
+                } else if (daysRemaining === 0) {
+                    daysDisplay.textContent = '오늘이 마지막 날!';
+                } else {
+                    daysDisplay.textContent = '기간 종료됨 - 새 주를 시작하세요!';
+                }
             } else { 
                 display.textContent = '새로운 주를 시작해주세요.'; 
                 daysDisplay.textContent = '';
@@ -911,28 +1044,41 @@
         function updateWeeklyGoalsDisplay() {
             const container = document.getElementById('weekly-goals-container');
             container.innerHTML = '';
-            if (!weeklyRewards || weeklyRewards.length === 0) { container.innerHTML = '<p class="text-gray-500 text-center">설정된 보상이 없습니다.</p>'; return; }
+            if (!weeklyRewards || weeklyRewards.length === 0) { 
+                container.innerHTML = '<p class="text-gray-500 text-center">설정된 보상이 없습니다.</p>'; 
+                return;
+            }
             const sortedRewards = weeklyRewards.sort((a, b) => (a.goal_en + a.goal_ko + a.goal_ma) - (b.goal_en + b.goal_ko + b.goal_ma));
             sortedRewards.forEach(reward => {
                 const achieved = weeklyEnglishScore >= reward.goal_en && weeklyKoreanScore >= reward.goal_ko && weeklyMathScore >= reward.goal_ma;
                 const goalEl = document.createElement('div');
                 goalEl.className = `flex justify-between items-center p-3 rounded-lg transition-all duration-300 ${achieved ? 'bg-green-100' : 'bg-gray-100'}`;
-                goalEl.innerHTML = `<div><span class="font-bold ${achieved ? 'text-green-600 line-through' : 'text-gray-700'}">${reward.desc}</span> <span class="text-sm ${achieved ? 'text-green-500' : 'text-gray-500'}">(영어 ${reward.goal_en}점 / 한글 ${reward.goal_ko}점 / 수학 ${reward.goal_ma}점)</span></div><div class="text-2xl">${achieved ? '✅' : '⬜'}</div>`;
+                goalEl.innerHTML = `
+                    <div>
+                        <span class="font-bold ${achieved ? 'text-green-600 line-through' : 'text-gray-700'}">${reward.desc}</span> 
+                        <span class="text-sm ${achieved ? 'text-green-500' : 'text-gray-500'}">(영어 ${reward.goal_en}점 / 한글 ${reward.goal_ko}점 / 수학 ${reward.goal_ma}점)</span>
+                    </div>
+                    <div class="text-2xl">${achieved ? '✅' : '⬜'}</div>`;
                 container.appendChild(goalEl);
             });
         }
         
+        // --- 화면 전환 로직 ---
         function startSession(sessionType) {
-            console.log(`Starting session: ${sessionType}`);
             currentSessionType = sessionType;
             homeScreen.classList.add('hidden');
             learningScreen.classList.remove('hidden');
             updateLearningScreenScoresDisplay();
+            
+            // 화면 초기화
             problemContainer.innerHTML = '';
             actionButtons.innerHTML = '';
             currentProblemScoreContainer.innerHTML = '';
+            
+            // 이전 세션 데이터 정리
             currentProblem = null;
             isFetching = false;
+            
             if (sessionType === 'english') {
                 subjectHeader.textContent = '🇺🇸 AI 영어 공부';
                 englishInfo.classList.remove('hidden');
@@ -966,45 +1112,73 @@
         function showHomeScreen() {
             loginScreen.classList.add('hidden');
             learningScreen.classList.add('hidden');
-            vocabularyScreen.classList.add('hidden');
             homeScreen.classList.remove('hidden');
+            
+            // 홈 화면으로 돌아올 때 첫 문제들 미리 준비
             prefetchInitialProblems();
+            
+            // UI 업데이트 먼저 실행
             updateHomeScreenUI();
+            
+            // 주간 체크는 데이터 로드가 완료된 후에만 (setTimeout으로 지연)
             setTimeout(() => {
                 const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
-                if (!weekStartDate) openWeekSetupModal('새로운 주를 시작하고 이번 주 보상을 정해주세요!');
-                else if (Date.now() - new Date(weekStartDate).getTime() > oneWeekInMs) openWeekSetupModal('일주일이 지났어요! 새로운 주를 시작하세요.');
+                if (!weekStartDate) {
+                    openWeekSetupModal('새로운 주를 시작하고 이번 주 보상을 정해주세요!');
+                } else if (Date.now() - weekStartDate > oneWeekInMs) {
+                    openWeekSetupModal('일주일이 지났어요! 새로운 주를 시작하세요.');
+                }
             }, 100);
         }
 
+        // --- 문제 렌더링 및 채점 로직 ---
         function renderEnglishProblem(problem) {
+            console.log("Rendering English Problem:", problem);
             const baseScore = 10;
             const bonus = consecutiveCorrectEnglish * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
+
             const shuffledOptions = [...problem.options].sort(() => Math.random() - 0.5);
-            let optionsHtml = shuffledOptions.map(option => `<button class="english-option btn btn-blue w-full p-4 text-xl">${option.toString().trim().normalize('NFC')}</button>`).join('');
+            let optionsHtml = shuffledOptions.map(option => {
+                const normalizedOption = option.toString().trim().normalize('NFC');
+                return `<button class="english-option btn btn-blue w-full p-4 text-xl">${normalizedOption}</button>`;
+            }).join('');
+            
             let questionHTML = `<p class="text-2xl text-gray-800 mb-6 min-h-[6rem]">${problem.q.replace(/\n/g, '<br>')}</p>`;
             if (problem.category === 'Main Idea') {
                 questionHTML = `<p class="english-question-text text-gray-800 mb-6 min-h-[6rem]">${problem.q.replace(/\n/g, '<br>')}</p>`;
             }
-            problemContainer.innerHTML = `<div class="w-full"><div class="mb-4"><span class="text-sm font-bold text-white bg-purple-500 px-3 py-1 rounded-full">${problem.category}</span></div>${questionHTML}<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div></div>`;
+
+            problemContainer.innerHTML = `
+                <div class="w-full">
+                    <div class="mb-4">
+                        <span class="text-sm font-bold text-white bg-purple-500 px-3 py-1 rounded-full">${problem.category}</span>
+                    </div>
+                    ${questionHTML}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div>
+                </div>`;
+                
             document.querySelectorAll('.english-option').forEach(button => {
-                button.addEventListener('click', (event) => checkEnglishAnswer(problem, event.target.textContent));
+                button.addEventListener('click', (event) => {
+                    console.log("English option clicked:", event.target.textContent);
+                    checkEnglishAnswer(problem, event.target.textContent);
+                });
             });
         }
 
         function checkEnglishAnswer(problem, userAnswer) {
-            const normalize = (str) => str ? str.toString().trim().normalize('NFC') : '';
-            const isCorrect = normalize(userAnswer) === normalize(problem.a);
-            if (currentSessionType !== 'review') updateStats('english', problem.category, isCorrect);
-
-            if (problem.vocabulary && Array.isArray(problem.vocabulary)) {
-                problem.vocabulary.forEach(voc => {
-                    if (voc && voc.word && !vocabulary.some(v => v.word === voc.word)) {
-                        vocabulary.push({ ...voc, category: problem.category });
-                    }
-                });
-                vocabulary.sort((a, b) => a.word.localeCompare(b.word));
+            console.log("checkEnglishAnswer called with:", problem, userAnswer);
+            const normalizeString = (str) => {
+                if (!str) return '';
+                return str.toString().trim().normalize('NFC');
+            };
+            
+            const normalizedUserAnswer = normalizeString(userAnswer);
+            const normalizedCorrectAnswer = normalizeString(problem.a);
+            
+            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+            if (currentSessionType !== 'review') {
+                updateStats('english', problem.category, isCorrect);
             }
             
             document.querySelectorAll('.english-option').forEach(btn => btn.disabled = true);
@@ -1012,38 +1186,67 @@
             if (isCorrect) {
                 const points = 10 + (consecutiveCorrectEnglish * 2);
                 addScore(points, 'english');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-green-500"><img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg"><span>Correct! 🎉 (+${points} points)</span></div>`;
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-green-500">
+                    <img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg">
+                    <span>Correct! 🎉 (+${points} points)</span>
+                </div>`;
                 consecutiveCorrectEnglish++;
-                if (currentSessionType === 'review') mistakes.splice(currentMistakeIndex, 1);
+                
+                if (currentSessionType === 'review') { 
+                    mistakes.splice(currentMistakeIndex, 1); 
+                    saveMistakes(); 
+                }
             } else {
-                addScore(-5, 'english');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>Incorrect... (-5 points) The correct answer is '${problem.a}'.</span></div>`;
+                const basePenalty = 5;
+                const penalty = basePenalty;
+                addScore(-penalty, 'english');
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500">
+                    <img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg">
+                    <span>Incorrect... (-${penalty} points) The correct answer is '${problem.a}'.</span>
+                </div>`;
                 consecutiveCorrectEnglish = 0;
-                if (currentSessionType !== 'review') mistakes.push(problem);
+                
+                if (currentSessionType !== 'review') { 
+                    mistakes.push(problem); 
+                    saveMistakes(); 
+                } else { 
+                    currentMistakeIndex++; 
+                }
             }
             
             feedbackOverlay.classList.remove('hidden');
             saveAllData();
             
-            actionButtons.innerHTML = `<button id="next-problem" class="btn btn-blue">Next Problem</button><button id="save-problem" class="btn btn-orange">Save Problem</button>${problem.solution ? `<button id="show-solution" class="btn btn-gray">View Solution</button>` : ''}`;
+            actionButtons.innerHTML = `
+                <button id="next-problem" class="btn btn-blue">Next Problem</button>
+                <button id="save-problem" class="btn btn-orange">Save Problem</button>
+                ${problem.solution ? `<button id="show-solution" class="btn btn-gray">View Solution</button>` : ''}`;
             document.getElementById('save-problem').onclick = () => saveCurrentProblemForLater(problem);
             
             if (problem.solution) {
                 document.getElementById('show-solution').onclick = () => {
                     if (confirm('Are you sure you want to see the solution?\n\n⚠️ You will lose 2 points.')) {
-                        if (currentSessionType !== 'review' && currentSessionType !== 'saved') addScore(-2, 'english');
+                        if (currentSessionType !== 'review' && currentSessionType !== 'saved') {
+                            addScore(-2, 'english');
+                        }
                         solutionText.innerHTML = `<div class="font-bold text-xl mb-4">🧠 Solution</div><div class="text-lg">${problem.solution.replace(/(\d\.)/g, '<br>$1')}</div>`;
                         solutionOverlay.classList.remove('hidden');
                         document.getElementById('show-solution').disabled = true;
+                        document.getElementById('show-solution').textContent = 'Solution Viewed';
                     }
                 };
             }
             
             document.getElementById('next-problem').onclick = () => {
                 feedbackOverlay.classList.add('hidden');
-                if (currentSessionType === 'review') { currentMistakeIndex++; loadMistakeProblem(); }
-                else if (currentSessionType === 'saved') { currentSavedIndex++; loadSavedProblem(); }
-                else loadProblem();
+                if (currentSessionType === 'review') {
+                    loadMistakeProblem();
+                } else if (currentSessionType === 'saved') {
+                    currentSavedIndex++;
+                    loadSavedProblem();
+                } else {
+                    loadProblem();
+                }
             };
         }
 
@@ -1051,53 +1254,119 @@
             const baseScore = 10;
             const bonus = consecutiveCorrectKorean * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
+
             const shuffledOptions = [...problem.options].sort(() => Math.random() - 0.5);
-            let optionsHtml = shuffledOptions.map(option => `<button class="korean-option btn btn-blue w-full p-4 text-xl">${option.toString().trim().normalize('NFC')}</button>`).join('');
-            problemContainer.innerHTML = `<div class="w-full"><div class="mb-4"><span class="text-sm font-bold text-white bg-cyan-500 px-3 py-1 rounded-full">${problem.category}</span></div><p class="text-2xl text-gray-800 mb-6 min-h-[6rem]">${problem.q}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div></div>`;
+            let optionsHtml = shuffledOptions.map(option => {
+                const normalizedOption = option.toString().trim().normalize('NFC');
+                return `<button class="korean-option btn btn-blue w-full p-4 text-xl">${normalizedOption}</button>`;
+            }).join('');
+            
+            problemContainer.innerHTML = `
+                <div class="w-full">
+                    <div class="mb-4">
+                        <span class="text-sm font-bold text-white bg-cyan-500 px-3 py-1 rounded-full">${problem.category}</span>
+                    </div>
+                    <p class="text-2xl text-gray-800 mb-6 min-h-[6rem]">${problem.q}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div>
+                </div>`;
+                
             document.querySelectorAll('.korean-option').forEach(button => {
-                button.onclick = () => checkKoreanAnswer(problem, button.textContent);
+                button.onclick = () => {
+                    const selectedAnswer = button.textContent;
+                    checkKoreanAnswer(problem, selectedAnswer);
+                };
             });
         }
 
         function checkKoreanAnswer(problem, userAnswer) {
-            const normalize = (str) => str ? str.toString().trim().normalize('NFC') : '';
-            const isCorrect = normalize(userAnswer) === normalize(problem.a);
-            if (currentSessionType !== 'review') updateStats('korean', problem.category, isCorrect);
+            // Normalize strings for comparison - trim whitespace and normalize Unicode
+            const normalizeString = (str) => {
+                if (!str) return '';
+                return str.toString().trim().normalize('NFC');
+            };
+            
+            const normalizedUserAnswer = normalizeString(userAnswer);
+            const normalizedCorrectAnswer = normalizeString(problem.a);
+            
+            console.log('Korean answer check:', {
+                userAnswer: normalizedUserAnswer,
+                correctAnswer: normalizedCorrectAnswer,
+                isMatch: normalizedUserAnswer === normalizedCorrectAnswer
+            });
+            
+            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+            if (currentSessionType !== 'review') {
+                updateStats('korean', problem.category, isCorrect);
+            }
+            
             document.querySelectorAll('.korean-option').forEach(btn => btn.disabled = true);
+            
             if (isCorrect) {
                 const points = 10 + (consecutiveCorrectKorean * 2);
                 addScore(points, 'korean');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-green-500"><img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg"><span>정답입니다! 🎉 (+${points}점)</span></div>`;
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-green-500">
+                    <img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg">
+                    <span>정답입니다! 🎉 (+${points}점)</span>
+                </div>`;
                 consecutiveCorrectKorean++;
                 consecutiveIncorrectKorean = 0;
-                if (currentSessionType === 'review') mistakes.splice(currentMistakeIndex, 1);
+                
+                if (currentSessionType === 'review') { 
+                    mistakes.splice(currentMistakeIndex, 1); 
+                    saveMistakes(); 
+                }
             } else {
-                const penalty = 5 + consecutiveIncorrectKorean;
+                const basePenalty = 5;
+                const penalty = basePenalty + consecutiveIncorrectKorean;
                 addScore(-penalty, 'korean');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>아쉬워요... (-${penalty}점) 정답은 '${problem.a}'입니다.</span></div>`;
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500">
+                    <img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg">
+                    <span>아쉬워요... (-${penalty}점) 정답은 '${problem.a}'입니다.</span>
+                </div>`;
                 consecutiveCorrectKorean = 0;
                 consecutiveIncorrectKorean++;
-                if (currentSessionType !== 'review') mistakes.push(problem);
+                
+                if (currentSessionType !== 'review') { 
+                    mistakes.push(problem); 
+                    saveMistakes(); 
+                } else { 
+                    currentMistakeIndex++; 
+                }
             }
+            
             feedbackOverlay.classList.remove('hidden');
             saveAllData();
-            actionButtons.innerHTML = `<button id="next-problem" class="btn btn-blue">다음 문제</button><button id="save-problem" class="btn btn-orange">문제 저장</button>${problem.solution ? `<button id="show-solution" class="btn btn-gray">풀이 보기</button>` : ''}`;
+            
+            actionButtons.innerHTML = `
+                <button id="next-problem" class="btn btn-blue">다음 문제</button>
+                <button id="save-problem" class="btn btn-orange">문제 저장</button>
+                ${problem.solution ? `<button id="show-solution" class="btn btn-gray">풀이 보기</button>` : ''}`;
             document.getElementById('save-problem').onclick = () => saveCurrentProblemForLater(problem);
+            
             if (problem.solution) {
                 document.getElementById('show-solution').onclick = () => {
                     if (confirm('풀이를 보시겠습니까?\n\n⚠️ 주의: 풀이를 보면 2점이 감점됩니다.')) {
-                        if (currentSessionType !== 'review' && currentSessionType !== 'saved') addScore(-2, 'korean');
+                        if (currentSessionType !== 'review' && currentSessionType !== 'saved') {
+                            addScore(-2, 'korean');
+                        }
                         solutionText.innerHTML = `<div class="font-bold text-xl mb-4">🧠 풀이</div><div class="text-lg">${problem.solution.replace(/(\d\.)/g, '<br>$1')}</div>`;
                         solutionOverlay.classList.remove('hidden');
                         document.getElementById('show-solution').disabled = true;
+                        document.getElementById('show-solution').textContent = '풀이 확인됨';
                     }
                 };
             }
+            
             document.getElementById('next-problem').onclick = () => {
                 feedbackOverlay.classList.add('hidden');
-                if (currentSessionType === 'review') { currentMistakeIndex++; loadMistakeProblem(); }
-                else if (currentSessionType === 'saved') { currentSavedIndex++; loadSavedProblem(); }
-                else loadProblem();
+                if (currentSessionType === 'review') {
+                    loadMistakeProblem();
+                } else if (currentSessionType === 'saved') {
+                    currentSavedIndex++;
+                    loadSavedProblem();
+                } else {
+                    loadProblem();
+                }
             };
         }
         
@@ -1116,81 +1385,166 @@
             const baseScore = 5 + mathLevel;
             const bonus = consecutiveCorrectMath * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
-            const formatNum = (n) => typeof n !== 'number' || !isFinite(n) ? n : Number.isInteger(n) ? n.toString() : n.toFixed(Math.abs(n) < 1 ? 2 : 1).replace(/\.0$/, '');
-            const shuffledOptions = [...problem.options].map(o => typeof o === 'number' ? o : parseFloat((o + '').replace(/,/g, ''))).sort(() => Math.random() - 0.5);
+            
+            const formatNum = (n) => {
+                if (typeof n !== 'number' || !isFinite(n)) return n;
+                return Number.isInteger(n) ? n.toString() : n.toFixed(Math.abs(n) < 1 ? 2 : 1).replace(/\.0$/, '');
+            };
+            const shuffledOptions = [...problem.options].map(o => (typeof o === 'number' ? o : parseFloat((o + '').replace(/,/g, '')))).sort(() => Math.random() - 0.5);
             const isWordProblem = problem.q_en.split(' ').length > 5;
-            const questionHtml = isWordProblem ? `<p class="text-2xl text-gray-800 mb-2">${problem.q_ko}</p><p class="text-base text-gray-500 mb-8">${problem.q_en}</p>` : `<p class="text-5xl font-bold text-gray-800 mb-2">${problem.q_ko}</p><p class="text-xl text-gray-500 mb-8">${problem.q_en}</p>`;
-            problemContainer.innerHTML = `<div class="text-center w-full">${questionHtml}<div class="grid grid-cols-2 gap-4 options-grid">${shuffledOptions.map(option => `<button class="math-option btn btn-blue w-full p-4 text-2xl" data-value="${typeof option === 'number' ? option : parseFloat((option + '').replace(/,/g, ''))}">${Number.isFinite(option) ? formatNum(option) : option}</button>`).join('')}</div></div>`;
-            document.querySelectorAll('.math-option').forEach(b => {
-                b.onclick = () => checkMathAnswer(problem, b.getAttribute('data-value'));
+            const questionHtml = isWordProblem ? 
+                `<p class="text-2xl text-gray-800 mb-2">${problem.q_ko}</p><p class="text-base text-gray-500 mb-8">${problem.q_en}</p>` : 
+                `<p class="text-5xl font-bold text-gray-800 mb-2">${problem.q_ko}</p><p class="text-xl text-gray-500 mb-8">${problem.q_en}</p>`;
+                
+            problemContainer.innerHTML = `
+                <div class="text-center w-full">
+                    ${questionHtml}
+                    <div class="grid grid-cols-2 gap-4 options-grid">
+                        ${shuffledOptions.map(option => {
+                            const numVal = typeof option === 'number' ? option : parseFloat((option + '').replace(/,/g, ''));
+                            const displayValue = Number.isFinite(numVal) ? formatNum(numVal) : option;
+                            return `<button class="math-option btn btn-blue w-full p-4 text-2xl" data-value="${numVal}">${displayValue}</button>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+                
+            document.querySelectorAll('.math-option').forEach(b => { 
+                b.onclick = () => {
+                    const selectedAnswer = b.getAttribute('data-value');
+                    console.log('Math button clicked:', { text: b.textContent, value: selectedAnswer });
+                    checkMathAnswer(problem, selectedAnswer);
+                };
             });
         }
         
         function checkMathAnswer(problem, userAnswer) {
-            const normalizeNumber = (num) => num === null || num === undefined || num === '' ? NaN : parseFloat(num.toString().replace(/,/g, ''));
+            // Handle different number formats and ensure proper comparison
+            const normalizeNumber = (num) => {
+                if (num === null || num === undefined || num === '') return NaN;
+                const parsed = parseFloat(num.toString().replace(/,/g, ''));
+                return isNaN(parsed) ? NaN : parsed;
+            };
+            
             const normalizedUserAnswer = normalizeNumber(userAnswer);
             const normalizedCorrectAnswer = normalizeNumber(problem.a);
-            let isCorrect = !isNaN(normalizedUserAnswer) && !isNaN(normalizedCorrectAnswer) && Math.abs(normalizedUserAnswer - normalizedCorrectAnswer) < Math.max(0.01, Math.abs(normalizedCorrectAnswer) * 0.001);
-            if (currentSessionType !== 'review') updateStats('math', `level_${mathLevel}`, isCorrect);
+            
+            console.log('Math answer check:', {
+                userAnswer: normalizedUserAnswer,
+                correctAnswer: normalizedCorrectAnswer,
+                original: { user: userAnswer, correct: problem.a }
+            });
+            
+            // Check if both are valid numbers and calculate correctness
+            let isCorrect = false;
+            if (isNaN(normalizedUserAnswer) || isNaN(normalizedCorrectAnswer)) {
+                console.warn('Invalid number comparison:', { user: normalizedUserAnswer, correct: normalizedCorrectAnswer });
+                isCorrect = false;
+            } else {
+                // Use appropriate tolerance for floating point comparison
+                const tolerance = Math.max(0.01, Math.abs(normalizedCorrectAnswer) * 0.001);
+                isCorrect = Math.abs(normalizedUserAnswer - normalizedCorrectAnswer) < tolerance;
+            }
+            
+            if (currentSessionType !== 'review') {
+                updateStats('math', `level_${mathLevel}`, isCorrect);
+            }
+
             document.querySelectorAll('.math-option').forEach(btn => btn.disabled = true);
+            
             if (isCorrect) {
                 const points = 5 + mathLevel + (consecutiveCorrectMath * 2);
                 addScore(points, 'math');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-green-500"><img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg"><span>정답입니다! 👍 (+${points}점)</span></div>`;
-                if (currentSessionType === 'review') mistakes.splice(currentMistakeIndex, 1);
-                else {
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-green-500">
+                    <img src="roopy_succ.jpeg" alt="Success" class="w-32 h-32 rounded-lg">
+                    <span>정답입니다! 👍 (+${points}점)</span>
+                </div>`;
+                
+                if (currentSessionType === 'review') { 
+                    mistakes.splice(currentMistakeIndex, 1); 
+                    saveMistakes(); 
+                } else {
                     mathScore++; 
                     consecutiveCorrectMath++; 
                     consecutiveIncorrect = 0;
+                    
                     if (consecutiveCorrectMath > 0 && consecutiveCorrectMath % 3 === 0 && mathLevel < 10) {
                         mathLevel++;
                         const feedbackSpan = feedbackContent.querySelector('span');
-                        if (feedbackSpan) feedbackSpan.textContent += ' 난이도가 올랐어요!';
+                        if (feedbackSpan) {
+                            feedbackSpan.textContent += ' 난이도가 올랐어요!';
+                        }
                     }
                 }
             } else {
-                const penalty = Math.round((5 + mathLevel) / 2) + consecutiveIncorrect;
+                const basePenalty = Math.round((5 + mathLevel) / 2);
+                const penalty = basePenalty + consecutiveIncorrect;
                 addScore(-penalty, 'math');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>아쉬워요... (-${penalty}점) 정답은 ${problem.a} 입니다.</span></div>`;
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500">
+                    <img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg">
+                    <span>아쉬워요... (-${penalty}점) 정답은 ${problem.a} 입니다.</span>
+                </div>`;
+                
                 if (currentSessionType !== 'review') {
                     mistakes.push(problem);
+                    saveMistakes();
                     consecutiveIncorrect++; 
                     consecutiveCorrectMath = 0;
-                    if (consecutiveIncorrect >= 2 && mathLevel > 1) {
+                    
+                    if (consecutiveIncorrect >= 2 && mathLevel > 1) { 
                         mathLevel--;
                         consecutiveIncorrect = 0;
                         const feedbackSpan = feedbackContent.querySelector('span');
-                        if (feedbackSpan) feedbackSpan.textContent += ' 난이도가 낮아졌어요.';
+                        if (feedbackSpan) {
+                            feedbackSpan.textContent += ' 난이도가 낮아졌어요.';
+                        }
                     }
+                } else { 
+                    currentMistakeIndex++; 
                 }
             }
+            
             feedbackOverlay.classList.remove('hidden');
             saveAllData();
             if (currentSessionType !== 'review') updateMathInfo();
-            actionButtons.innerHTML = `<button id="next-problem" class="btn btn-blue">다음 문제</button><button id="save-problem" class="btn btn-orange">문제 저장</button>${problem.solution ? `<button id="show-solution" class="btn btn-gray">풀이 보기</button>` : ''}`;
+            
+            actionButtons.innerHTML = `
+                <button id="next-problem" class="btn btn-blue">다음 문제</button>
+                <button id="save-problem" class="btn btn-orange">문제 저장</button>
+                ${problem.solution ? `<button id="show-solution" class="btn btn-gray">풀이 보기</button>` : ''}`;
             document.getElementById('save-problem').onclick = () => saveCurrentProblemForLater(problem);
+            
             if (problem.solution) {
                 document.getElementById('show-solution').onclick = () => {
                     if (confirm('풀이를 보시겠습니까?\n\n⚠️ 주의: 풀이를 보면 2점이 감점됩니다.')) {
-                        if (currentSessionType !== 'review' && currentSessionType !== 'saved') addScore(-2, 'math');
+                        if (currentSessionType !== 'review' && currentSessionType !== 'saved') {
+                            addScore(-2, 'math');
+                        }
                         solutionText.innerHTML = `<div class="font-bold text-xl mb-4">🧠 풀이</div><div class="text-lg">${problem.solution.replace(/(\d\.)/g, '<br>$1')}</div>`;
                         solutionOverlay.classList.remove('hidden');
                         document.getElementById('show-solution').disabled = true;
+                        document.getElementById('show-solution').textContent = '풀이 확인됨';
                     }
                 };
             }
+            
             document.getElementById('next-problem').onclick = () => {
                 feedbackOverlay.classList.add('hidden');
-                if (currentSessionType === 'review') { currentMistakeIndex++; loadMistakeProblem(); }
-                else if (currentSessionType === 'saved') { currentSavedIndex++; loadSavedProblem(); }
-                else loadProblem();
+                if (currentSessionType === 'review') {
+                    loadMistakeProblem();
+                } else if (currentSessionType === 'saved') {
+                    currentSavedIndex++;
+                    loadSavedProblem();
+                } else {
+                    loadProblem();
+                }
             };
         }
 
+        // --- 오답 노트 로직 ---
         function startMistakeReview() {
             currentProblemScoreContainer.innerHTML = '';
             if (mistakes.length === 0) {
-                problemContainer.innerHTML = `<p class="text-2xl text-gray-700 text-center">🎉<br>오답 노트가 비어있어요. 아주 잘하고 있어요!</p>`; 
+                problemContainer.innerHTML = `<p class="text-2xl text-gray-700 text-center">🎉<br>오답 노트가 비어있어요. 아주 잘하고 있어요!</p>`;
                 actionButtons.innerHTML = ''; 
                 return;
             }
@@ -1201,17 +1555,33 @@
         
         function loadMistakeProblem() {
             actionButtons.innerHTML = '';
+            
             if (currentMistakeIndex >= mistakes.length) {
                 problemContainer.innerHTML = `<p class="text-2xl text-gray-700 text-center">✨<br>오답 노트를 모두 다시 풀었어요! 정말 대단해요!</p>`; 
                 return;
             }
+            
             const problem = mistakes[currentMistakeIndex];
             currentProblem = problem;
-            if (problem.isEnglish) renderEnglishProblem(problem);
-            else if (problem.isKorean) renderKoreanProblem(problem);
-            else renderMathProblem(problem);
+            prefetchedEnglishProblem = null;
+            prefetchedKoreanProblem = null;
+            prefetchedMathProblem = null;
+            
+            if (problem.isEnglish) {
+                renderEnglishProblem(problem);
+            } else if (problem.isKorean) {
+                renderKoreanProblem(problem);
+            } else {
+                renderMathProblem(problem);
+            }
         }
         
+        function saveMistakes() {
+            // Mistakes are saved as part of saveAllData
+            saveAllData();
+        }
+
+        // --- 저장한 문제 다시 풀기 ---
         function startSavedReview() {
             currentProblemScoreContainer.innerHTML = '';
             if (!savedProblems || savedProblems.length === 0) {
@@ -1233,9 +1603,13 @@
             }
             const problem = savedProblems[currentSavedIndex];
             currentProblem = problem;
-            if (problem.isEnglish) renderEnglishProblem(problem);
-            else if (problem.isKorean) renderKoreanProblem(problem);
-            else renderMathProblem(problem);
+            if (problem.isEnglish) {
+                renderEnglishProblem(problem);
+            } else if (problem.isKorean) {
+                renderKoreanProblem(problem);
+            } else {
+                renderMathProblem(problem);
+            }
         }
 
         function saveCurrentProblemForLater(problem) {
@@ -1254,11 +1628,19 @@
             }
         }
 
+        // --- 통계 로직 ---
         function updateStats(subject, key, isCorrect) {
-            if (!stats[subject]) stats[subject] = {};
-            if (!stats[subject][key]) stats[subject][key] = { attempted: 0, correct: 0 };
+            if (!stats[subject]) {
+                stats[subject] = {};
+            }
+            if (!stats[subject][key]) {
+                stats[subject][key] = { attempted: 0, correct: 0 };
+            }
             stats[subject][key].attempted++;
-            if (isCorrect) stats[subject][key].correct++;
+            if (isCorrect) {
+                stats[subject][key].correct++;
+            }
+            // Stats are saved as part of saveAllData
             saveAllData();
         }
         
@@ -1269,112 +1651,167 @@
         
         function renderStats() {
             let html = ``;
-            html += `<div class="mb-6"><h3 class="text-xl font-bold mb-3 text-purple-600">🇺🇸 영어 통계</h3><div class="bg-gray-100 p-4 rounded-lg"><div class="grid grid-cols-4 gap-4 text-center font-bold text-gray-600 border-b pb-2 mb-2"><span>분야</span><span>푼 문제</span><span>맞은 개수</span><span>정답률</span></div>`;
+            
+            // 영어 통계
+            html += `<div class="mb-6">
+                <h3 class="text-xl font-bold mb-3 text-purple-600">🇺🇸 영어 통계</h3>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <div class="grid grid-cols-4 gap-4 text-center font-bold text-gray-600 border-b pb-2 mb-2">
+                        <span>분야</span>
+                        <span>푼 문제</span>
+                        <span>맞은 개수</span>
+                        <span>정답률</span>
+                    </div>`;
+                    
             Object.keys(stats.english).forEach(key => {
                 const s = stats.english[key];
                 const accuracy = s.attempted > 0 ? ((s.correct / s.attempted) * 100).toFixed(0) : 0;
-                html += `<div class="grid grid-cols-4 gap-4 text-center items-center py-1"><span class="font-bold text-left">${key}</span><span>${s.attempted}</span><span>${s.correct}</span><span class="font-bold text-lg ${accuracy >= 80 ? 'text-green-600' : 'text-orange-500'}">${accuracy}%</span></div>`;
+                html += `
+                    <div class="grid grid-cols-4 gap-4 text-center items-center py-1">
+                        <span class="font-bold text-left">${key}</span>
+                        <span>${s.attempted}</span>
+                        <span>${s.correct}</span>
+                        <span class="font-bold text-lg ${accuracy >= 80 ? 'text-green-600' : 'text-orange-500'}">${accuracy}%</span>
+                    </div>`;
             });
+            
             html += `</div></div>`;
-            html += `<div class="mb-6"><h3 class="text-xl font-bold mb-3 text-cyan-600">📝 한글 통계</h3><div class="bg-gray-100 p-4 rounded-lg"><div class="grid grid-cols-4 gap-4 text-center font-bold text-gray-600 border-b pb-2 mb-2"><span>분야</span><span>푼 문제</span><span>맞은 개수</span><span>정답률</span></div>`;
+
+            // 한글 통계
+            html += `<div class="mb-6">
+                <h3 class="text-xl font-bold mb-3 text-cyan-600">📝 한글 통계</h3>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <div class="grid grid-cols-4 gap-4 text-center font-bold text-gray-600 border-b pb-2 mb-2">
+                        <span>분야</span>
+                        <span>푼 문제</span>
+                        <span>맞은 개수</span>
+                        <span>정답률</span>
+                    </div>`;
+                    
             Object.keys(stats.korean).forEach(key => {
                 const s = stats.korean[key];
                 const accuracy = s.attempted > 0 ? ((s.correct / s.attempted) * 100).toFixed(0) : 0;
-                html += `<div class="grid grid-cols-4 gap-4 text-center items-center py-1"><span class="font-bold text-left">${key}</span><span>${s.attempted}</span><span>${s.correct}</span><span class="font-bold text-lg ${accuracy >= 80 ? 'text-green-600' : 'text-orange-500'}">${accuracy}%</span></div>`;
+                html += `
+                    <div class="grid grid-cols-4 gap-4 text-center items-center py-1">
+                        <span class="font-bold text-left">${key}</span>
+                        <span>${s.attempted}</span>
+                        <span>${s.correct}</span>
+                        <span class="font-bold text-lg ${accuracy >= 80 ? 'text-green-600' : 'text-orange-500'}">${accuracy}%</span>
+                    </div>`;
             });
+            
             html += `</div></div>`;
-            html += `<div><h3 class="text-xl font-bold mb-3 text-yellow-600">🧮 수학 통계</h3><div class="bg-gray-100 p-4 rounded-lg"><div class="grid grid-cols-4 gap-4 text-center font-bold text-gray-600 border-b pb-2 mb-2"><span>난이도</span><span>푼 문제</span><span>맞은 개수</span><span>정답률</span></div>`;
-            Object.keys(stats.math).sort((a, b) => parseInt(a.split('_')[1]) - parseInt(b.split('_')[1])).forEach(key => {
+            
+            // 수학 통계
+            html += `<div>
+                <h3 class="text-xl font-bold mb-3 text-yellow-600">🧮 수학 통계</h3>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <div class="grid grid-cols-4 gap-4 text-center font-bold text-gray-600 border-b pb-2 mb-2">
+                        <span>난이도</span>
+                        <span>푼 문제</span>
+                        <span>맞은 개수</span>
+                        <span>정답률</span>
+                    </div>`;
+                    
+            Object.keys(stats.math)
+                .sort((a, b) => parseInt(a.split('_')[1]) - parseInt(b.split('_')[1]))
+                .forEach(key => {
                     const s = stats.math[key];
                     if (s.attempted === 0) return;
                     const level = key.split('_')[1];
                     const accuracy = s.attempted > 0 ? ((s.correct / s.attempted) * 100).toFixed(0) : 0;
-                    html += `<div class="grid grid-cols-4 gap-4 text-center items-center py-1"><span class="font-bold text-left">레벨 ${level}</span><span>${s.attempted}</span><span>${s.correct}</span><span class="font-bold text-lg ${accuracy >= 80 ? 'text-green-600' : 'text-orange-500'}">${accuracy}%</span></div>`;
+                    html += `
+                        <div class="grid grid-cols-4 gap-4 text-center items-center py-1">
+                            <span class="font-bold text-left">레벨 ${level}</span>
+                            <span>${s.attempted}</span>
+                            <span>${s.correct}</span>
+                            <span class="font-bold text-lg ${accuracy >= 80 ? 'text-green-600' : 'text-orange-500'}">${accuracy}%</span>
+                        </div>`;
                 });
+                
             html += `</div></div>`;
+            
             statsContainer.innerHTML = html;
         }
 
         function resetStats() {
+            // 관리자 비밀번호 확인
             const adminPassword = prompt('🔐 관리자 인증\n\n통계 초기화는 관리자 권한이 필요합니다.\n관리자 비밀번호를 입력하세요:');
-            if (!adminPassword) return;
-            if (decryptValue(ENCRYPTED_ADMIN_PASSWORD) !== adminPassword) {
-                alert('❌ 잘못된 관리자 비밀번호입니다.');
+            
+            if (!adminPassword) {
+                alert('❌ 비밀번호가 입력되지 않았습니다.');
                 return;
             }
-            if (confirm('⚠️ 관리자 권한 확인됨\n\n정말로 모든 학습 통계를 초기화하시겠습니까?\n\n🚨 이 작업은 되돌릴 수 없습니다!')) {
+            
+            const correctAdminPassword = decryptValue(ENCRYPTED_ADMIN_PASSWORD);
+            if (adminPassword !== correctAdminPassword) {
+                alert('❌ 잘못된 관리자 비밀번호입니다.\n\n⚠️ 보안상의 이유로 이 시도가 기록됩니다.');
+                console.warn('Unauthorized admin access attempt at:', new Date().toISOString());
+                return;
+            }
+            
+            if (confirm('⚠️ 관리자 권한 확인됨\n\n정말로 모든 학습 통계를 초기화하시겠습니까?\n\n📊 삭제될 데이터:\n- 모든 과목별 통계\n- 정답률 기록\n- 문제별 시도 횟수\n\n🚨 이 작업은 되돌릴 수 없습니다!')) {
                 initializeStats();
                 saveAllData();
                 renderStats();
-                alert('✅ 모든 통계가 초기화되었습니다.');
-            }
-        }
-
-        function showVocabularyScreen() {
-            homeScreen.classList.add('hidden');
-            learningScreen.classList.add('hidden');
-            vocabularyScreen.classList.remove('hidden');
-            renderVocabulary();
-        }
-
-        function renderVocabulary() {
-            const container = vocabularyContainer;
-            const search = vocabSearch.value.toLowerCase().trim();
-            const filter = vocabFilter.value;
-            container.innerHTML = '';
-            const filteredVocab = vocabulary.filter(v => {
-                if (!v || !v.word || !v.korean) return false;
-                const matchesSearch = v.word.toLowerCase().includes(search) || v.korean.toLowerCase().includes(search);
-                const matchesFilter = filter === 'all' || v.category === filter;
-                return matchesSearch && matchesFilter;
-            });
-            totalWordsSpan.textContent = filteredVocab.length;
-            if (filteredVocab.length === 0) {
-                vocabEmptyState.classList.remove('hidden');
-                container.classList.add('hidden');
-            } else {
-                vocabEmptyState.classList.add('hidden');
-                container.classList.remove('hidden');
-                filteredVocab.forEach(v => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm';
-                    card.innerHTML = `<h4 class="text-xl font-bold text-purple-700">${v.word} <span class="text-lg font-normal text-gray-500">(${v.korean})</span></h4><p class="text-gray-600 mt-1">${v.definition}</p><p class="text-gray-500 italic mt-2">"${v.example}"</p><span class="text-xs text-white bg-purple-400 px-2 py-1 rounded-full mt-2 inline-block">${v.category || 'General'}</span>`;
-                    container.appendChild(card);
-                });
+                alert('✅ 관리자 권한으로 모든 통계가 초기화되었습니다.\n\n새로운 학습 기록이 시작됩니다.');
+                console.log('Admin stats reset completed at:', new Date().toISOString());
             }
         }
 
         // --- 이벤트 리스너 설정 ---
         closeSolutionOverlay.addEventListener('click', () => solutionOverlay.classList.add('hidden'));
+
         feedbackOverlay.addEventListener('click', () => feedbackOverlay.classList.add('hidden'));
+
         loginButton.addEventListener('click', () => {
-            if (passwordInput.value === decryptValue(ENCRYPTED_LOGIN_PASSWORD)) {
+            const correctPassword = decryptValue(ENCRYPTED_LOGIN_PASSWORD);
+            if (passwordInput.value === correctPassword) {
                 localStorage.setItem('learningApp_isLoggedIn', 'true');
+                
+                // 로그인 시 데이터 다시 로드하여 최신 상태 반영
                 loadAllData();
+                
                 showHomeScreen();
+                updateHomeScreenUI();
+                
+                console.log('로그인 성공 - 데이터 로드 완룟');
             } else {
                 loginError.textContent = '비밀번호가 맞지 않아요!';
                 passwordInput.value = '';
             }
         });
-        passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginButton.click(); });
-        startEnglishBtn.addEventListener('click', () => startSession('english'));
-        startKoreanBtn.addEventListener('click', () => startSession('korean'));
-        startMathBtn.addEventListener('click', () => startSession('math'));
-        startReviewBtn.addEventListener('click', () => startSession('review'));
-        startSavedBtn.addEventListener('click', () => startSession('saved'));
-        startVocabularyBtn.addEventListener('click', showVocabularyScreen);
-        homeButton.addEventListener('click', () => { learningScreen.classList.add('hidden'); showHomeScreen(); });
+        
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                loginButton.click();
+            }
+        });
+
+    startEnglishBtn.addEventListener('click', () => startSession('english'));
+    startKoreanBtn.addEventListener('click', () => startSession('korean'));
+    startMathBtn.addEventListener('click', () => startSession('math'));
+    startReviewBtn.addEventListener('click', () => startSession('review'));
+    startSavedBtn.addEventListener('click', () => startSession('saved'));
+        
+        homeButton.addEventListener('click', () => {
+            learningScreen.classList.add('hidden');
+            homeScreen.classList.remove('hidden');
+            updateHomeScreenUI();
+        });
+        
         statsButton.addEventListener('click', showStatsModal);
-        homeStatsButton.addEventListener('click', showStatsModal);
         closeStatsModal.addEventListener('click', () => statsModal.classList.add('hidden'));
-        resetStatsButton.addEventListener('click', resetStats);
         startNewWeekButton.addEventListener('click', () => openWeekSetupModal());
         saveWeekButton.addEventListener('click', saveWeeklyGoals);
         cancelWeekButton.addEventListener('click', () => weekSetupModal.classList.add('hidden'));
-        vocabHomeButton.addEventListener('click', () => { vocabularyScreen.classList.add('hidden'); showHomeScreen(); });
-        vocabSearch.addEventListener('input', renderVocabulary);
-        vocabFilter.addEventListener('change', renderVocabulary);
+        
+        // 홈 화면 통계 버튼
+        homeStatsButton.addEventListener('click', showStatsModal);
+        
+        resetStatsButton.addEventListener('click', resetStats);
+        
+        // Level change handlers
         englishLevelSelect.addEventListener('change', () => {
             const newLevel = parseInt(englishLevelSelect.value);
             if (newLevel !== englishLevel) {
@@ -1392,6 +1829,7 @@
                 }
             }
         });
+
         mathLevelSelect.addEventListener('change', () => {
             const newLevel = parseInt(mathLevelSelect.value);
             if (newLevel !== mathLevel) {
@@ -1409,13 +1847,45 @@
                 }
             }
         });
-        document.addEventListener('keydown', (event) => { if (event.key === 'Enter') actionButtons.querySelector('#next-problem')?.click(); });
-        window.addEventListener('beforeunload', () => saveAllData());
-        setInterval(() => { if (currentSessionType) saveAllData(); }, 30000);
-        document.addEventListener('visibilitychange', () => { if (document.hidden) saveAllData(); });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const nextButton = actionButtons.querySelector('#next-problem');
+                if (nextButton) nextButton.click();
+            }
+        });
+
+        // 페이지 종료 시 자동 저장
+        window.addEventListener('beforeunload', () => {
+            saveAllData();
+        });
+
+        // 주기적 자동 저장 (30초마다)
+        setInterval(() => {
+            if (currentSessionType) {
+                saveAllData();
+                console.log('자동 저장 실행:', new Date().toLocaleString());
+            }
+        }, 30000);
+
+        // 페이지 가시성 변경 시 저장 (탭 전환, 최소화 등)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                saveAllData();
+                console.log('페이지 숨김 - 자동 저장');
+            }
+        });
 
         // 앱 시작
         initializeApp();
+        
+        // 앱 시작 시 첫 문제들 미리 준비
+        setTimeout(() => {
+            prefetchInitialProblems();
+        }, 1000);
+        
+        // Show version info
+        console.log('유라의 지혜의 숲 v2.3 - Bug Fixes');
     </script>
 </body>
 </html>
