@@ -335,7 +335,7 @@
             </div>
              <div id="current-problem-score-container" class="text-center mb-4 text-lg text-gray-600 font-bold h-7"></div>
 
-            <div id="problem-container" class="min-h-[20rem] flex justify-center items-center">
+            <div id="problem-container" class="min-h-[20rem] flex justify-center items-start">
                 </div>
 
             <div id="action-buttons" class="mt-8 flex flex-wrap justify-center items-center gap-4">
@@ -1024,6 +1024,7 @@
             document.querySelectorAll('.english-option').forEach(button => {
                 button.addEventListener('click', (event) => checkEnglishAnswer(problem, event.target.textContent.trim()));
             });
+            resetProblemScroll();
         }
 
         function checkEnglishAnswer(problem, userAnswer) {
@@ -1095,6 +1096,7 @@
             document.querySelectorAll('.korean-option').forEach(button => {
                 button.onclick = () => checkKoreanAnswer(problem, button.textContent.trim());
             });
+            resetProblemScroll();
         }
 
         function checkKoreanAnswer(problem, userAnswer) {
@@ -1158,6 +1160,17 @@
             mathScoreDisplay.textContent = `맞은 개수: ${mathScore}`;
         }
 
+        function resetProblemScroll() {
+            requestAnimationFrame(() => {
+                learningScreen.scrollTop = 0;
+                problemContainer.scrollTop = 0;
+                const scrollablePassage = problemContainer.querySelector('.english-question-text');
+                if (scrollablePassage) {
+                    scrollablePassage.scrollTop = 0;
+                }
+            });
+        }
+
         function renderMathProblem(problem) {
             const baseScore = 5 + mathLevel;
             const bonus = consecutiveCorrectMath * 2;
@@ -1183,6 +1196,7 @@
                 const option = shuffledOptions[parseInt(button.dataset.index, 10)];
                 button.onclick = () => checkMathAnswer(problem, option);
             });
+            resetProblemScroll();
         }
         
         function checkMathAnswer(problem, selectedOption) {
