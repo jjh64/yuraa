@@ -651,6 +651,57 @@
             return rounded.toString().replace(/\.0+$/, '').replace(/(\.\d*?)(0+)$/, '$1').replace(/\.$/, '') || rounded.toString();
         }
 
+        const CIRCLED_DIGIT_MAP = {
+            '①': 1, '②': 2, '③': 3, '④': 4, '⑤': 5,
+            '⑥': 6, '⑦': 7, '⑧': 8, '⑨': 9, '⑩': 10
+        };
+
+        const LETTER_CHOICE_MAP = {
+            'A': 1, 'a': 1, 'B': 2, 'b': 2, 'C': 3, 'c': 3, 'D': 4, 'd': 4,
+            '가': 1, '나': 2, '다': 3, '라': 4,
+            'ㄱ': 1, 'ㄴ': 2, 'ㄷ': 3, 'ㄹ': 4
+        };
+
+        function toNormalizedString(value) {
+            if (value === undefined || value === null) return '';
+            try {
+                return value.toString().trim().normalize('NFC');
+            } catch {
+                return `${value}`.trim();
+            }
+        }
+
+        function stripLeadingChoiceMarker(text) {
+            let result = toNormalizedString(text);
+            if (!result) return '';
+            result = result.replace(/^(?:\(?\s*[0-9]+\s*\)?[.)]|[①-⑳]|[A-Da-d][.)]|\(?\s*(?:[가나다라]|[ㄱㄴㄷㄹ])\s*\)?[.)]|(?:[가나다라]|[ㄱㄴㄷㄹ])\s*-|[•·◦▪▫▶▷\-–—])\s*/, '');
+            return result.trim();
+        }
+
+        function normalizeKoreanChoiceText(text) {
+            const cleaned = stripLeadingChoiceMarker(text);
+            if (!cleaned) return '';
+            return cleaned.replace(/\s+/g, ' ').toLowerCase();
+        }
+
+        function parseChoiceIndexFromAnswer(answer) {
+            const str = toNormalizedString(answer);
+            if (!str) return null;
+            if (CIRCLED_DIGIT_MAP[str[0]]) return CIRCLED_DIGIT_MAP[str[0]];
+            if (LETTER_CHOICE_MAP[str[0]]) return LETTER_CHOICE_MAP[str[0]];
+            const numericMatch = str.match(/^\(?\s*([0-9]+)\s*\)?(?:번|번째)?$/);
+            if (numericMatch) {
+                const num = parseInt(numericMatch[1], 10);
+                return Number.isFinite(num) ? num : null;
+            }
+            const leadingNumeric = str.match(/^([0-9]+)[.)]/);
+            if (leadingNumeric) {
+                const num = parseInt(leadingNumeric[1], 10);
+                return Number.isFinite(num) ? num : null;
+            }
+            return null;
+        }
+
         async function prefetchInitialProblems() {
             fetchProblem('english', englishLevel).then(p => { prefetchedEnglishProblem = p; }).catch(err => console.error('영어 문제 미리 생성 실패:', err));
             fetchProblem('korean', mathLevel).then(p => { prefetchedKoreanProblem = p; }).catch(err => console.error('한글 문제 미리 생성 실패:', err));
@@ -1089,19 +1140,72 @@
             const baseScore = 10;
             const bonus = consecutiveCorrectKorean * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
-            const normalizedOptions = (problem.options || []).map(opt => opt.toString().trim().normalize('NFC'));
-            const shuffledOptions = [...normalizedOptions].sort(() => Math.random() - 0.5);
-            const optionsHtml = shuffledOptions.map(option => `<button class="korean-option btn btn-blue option-button w-full p-4">${option}</button>`).join('');
+            const optionData = (problem.options || []).map((opt, index) => {
+                const raw = opt !== undefined && opt !== null ? opt.toString() : '';
+                const display = stripLeadingChoiceMarker(raw) || raw.trim();
+                return {
+                    raw,
+                    display: display || raw.trim(),
+                    normalized: normalizeKoreanChoiceText(raw),
+                    index
+                };
+            });
+            const shuffledOptions = [...optionData].sort(() => Math.random() - 0.5);
+            const normalizedAnswerRaw = normalizeKoreanChoiceText(problem.a || '');
+            let correctIndex = optionData.findIndex(opt => opt.normalized && opt.normalized === normalizedAnswerRaw);
+            if (correctIndex === -1) {
+                const numericChoice = parseChoiceIndexFromAnswer(problem.a);
+                if (numericChoice !== null && optionData[numericChoice - 1]) {
+                    correctIndex = numericChoice - 1;
+                } else {
+                    const answerStripped = normalizeKoreanChoiceText(stripLeadingChoiceMarker(problem.a || ''));
+                    correctIndex = optionData.findIndex(opt => opt.normalized === answerStripped);
+                }
+            }
+            problem.__koreanOptionData = optionData;
+            problem.__koreanCorrectIndex = correctIndex >= 0 ? correctIndex : null;
+            problem.__koreanNormalizedAnswer = correctIndex >= 0 && optionData[correctIndex] ? optionData[correctIndex].normalized : normalizedAnswerRaw;
+            const optionsHtml = shuffledOptions.map(option => `<button class="korean-option btn btn-blue option-button w-full p-4" data-original-index="${option.index}">${option.display}</button>`).join('');
             problemContainer.innerHTML = `<div class="w-full"><div class="mb-4"><span class="text-sm font-bold text-white bg-cyan-500 px-3 py-1 rounded-full">${problem.category}</span></div><p class="question-text text-gray-800 mb-6 min-h-[6rem]">${problem.q}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div></div>`;
-            document.querySelectorAll('.korean-option').forEach(button => {
-                button.onclick = () => checkKoreanAnswer(problem, button.textContent.trim());
+            const renderedOptions = document.querySelectorAll('.korean-option');
+            renderedOptions.forEach((button, idx) => {
+                const option = shuffledOptions[idx];
+                button.onclick = () => checkKoreanAnswer(problem, option.normalized, option.index);
             });
             resetProblemScroll();
         }
 
-        function checkKoreanAnswer(problem, userAnswer) {
-            const normalize = (str) => str ? str.toString().trim().normalize('NFC') : '';
-            const isCorrect = normalize(userAnswer) === normalize(problem.a);
+        function checkKoreanAnswer(problem, selectedNormalized, selectedIndex) {
+            const normalize = (value) => normalizeKoreanChoiceText(value);
+            const expectedNormalized = problem.__koreanNormalizedAnswer || normalize(problem.a);
+            const correctIndex = problem.__koreanCorrectIndex;
+            const numericAnswer = parseChoiceIndexFromAnswer(problem.a);
+            const optionData = problem.__koreanOptionData || [];
+            let isCorrect = false;
+
+            if (selectedNormalized && expectedNormalized) {
+                isCorrect = selectedNormalized === expectedNormalized;
+            }
+
+            if (!isCorrect && correctIndex !== null && correctIndex !== undefined && selectedIndex === correctIndex) {
+                isCorrect = true;
+            }
+
+            if (!isCorrect && numericAnswer !== null && selectedIndex === numericAnswer - 1) {
+                isCorrect = true;
+            }
+
+            if (!isCorrect && optionData.length && correctIndex !== null && optionData[correctIndex]) {
+                const correctDisplayNormalized = normalize(optionData[correctIndex].display);
+                if (correctDisplayNormalized && correctDisplayNormalized === selectedNormalized) {
+                    isCorrect = true;
+                }
+            }
+
+            if (!isCorrect && normalize(problem.a) === selectedNormalized) {
+                isCorrect = true;
+            }
+
             if (currentSessionType !== 'review') updateStats('korean', problem.category, isCorrect);
             document.querySelectorAll('.korean-option').forEach(btn => btn.disabled = true);
             if (isCorrect) {
@@ -1114,7 +1218,10 @@
             } else {
                 const penalty = 5 + consecutiveIncorrectKorean;
                 addScore(-penalty, 'korean');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>아쉬워요... (-${penalty}점) 정답은 '${problem.a}'입니다.</span></div>`;
+                const correctOptionText = (optionData.length && correctIndex !== null && optionData[correctIndex])
+                    ? optionData[correctIndex].display || optionData[correctIndex].raw
+                    : stripLeadingChoiceMarker(problem.a || '') || problem.a;
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>아쉬워요... (-${penalty}점) 정답은 '${correctOptionText}'입니다.</span></div>`;
                 consecutiveCorrectKorean = 0;
                 consecutiveIncorrectKorean++;
                 if (currentSessionType !== 'review') mistakes.push(problem);
