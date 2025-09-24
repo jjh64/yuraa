@@ -157,13 +157,21 @@
         .subject-title {
             @apply text-2xl font-bold text-gray-700;
         }
+        .question-text {
+            font-size: 1.25rem !important;
+            line-height: 1.75rem !important;
+        }
         .english-question-text {
-            font-size: 1rem !important;  /* Standard readable size (16px) */
-            line-height: 1.5rem !important;
+            font-size: 1.25rem !important;
+            line-height: 1.75rem !important;
             text-align: left;
             max-height: 50vh;
             overflow-y: auto;
             padding-right: 0.5rem;
+        }
+        .option-button {
+            font-size: 1.25rem !important;
+            line-height: 1.75rem !important;
         }
         .btn {
             @apply px-6 py-2 rounded-lg font-bold text-white transition-colors duration-300 disabled:bg-gray-400;
@@ -330,7 +338,7 @@
             <div id="problem-container" class="min-h-[20rem] flex justify-center items-center">
                 </div>
 
-            <div id="action-buttons" class="mt-8 flex justify-around items-center">
+            <div id="action-buttons" class="mt-8 flex flex-wrap justify-center items-center gap-4">
                 </div>
         </div>
 
@@ -578,6 +586,7 @@
                 const savedData = saveSystem.loadLatestData();
                 if (!savedData) {
                     initializeStats();
+                    updateEnglishInfo();
                     return;
                 }
                 weekStartDate = savedData.weekStartDate;
@@ -597,11 +606,13 @@
                 vocabulary = savedData.vocabulary || [];
                 if (englishLevelSelect) englishLevelSelect.value = englishLevel.toString();
                 if (mathLevelSelect) mathLevelSelect.value = mathLevel.toString();
+                updateEnglishInfo();
                 updateLastSaveTime();
             } catch (e) {
                 console.error('데이터 로드 실패:', e);
                 initializeVariables();
                 initializeStats();
+                updateEnglishInfo();
             }
         }
 
@@ -623,6 +634,21 @@
             if (fullData && fullData.lastUpdated) {
                 lastSaveTime.textContent = `마지막 저장: ${new Date(fullData.lastUpdated).toLocaleString('ko-KR')}`;
             }
+        }
+
+        function formatMathValue(value, fallback) {
+            const hasFallback = fallback !== undefined && fallback !== null && `${fallback}`.trim() !== '';
+            if (hasFallback) {
+                return `${fallback}`.trim();
+            }
+            if (typeof value !== 'number' || !isFinite(value)) {
+                return '';
+            }
+            if (Number.isInteger(value)) {
+                return value.toString();
+            }
+            const rounded = Math.round((value + Number.EPSILON) * 1000) / 1000;
+            return rounded.toString().replace(/\.0+$/, '').replace(/(\.\d*?)(0+)$/, '$1').replace(/\.$/, '') || rounded.toString();
         }
 
         async function prefetchInitialProblems() {
@@ -746,14 +772,18 @@
                     if (problem.options) problem.options = problem.options.map(opt => opt.toString().trim().normalize('NFC'));
                 } else { // math
                     if (problem.a !== undefined) {
+                        problem.answerRaw = problem.a;
                         const numAnswer = parseFloat(problem.a);
                         if (!isNaN(numAnswer)) problem.a = numAnswer;
                     }
-                    if (problem.options) {
+                    if (Array.isArray(problem.options)) {
+                        problem.optionRaw = [...problem.options];
                         problem.options = problem.options.map(opt => {
                             const numOpt = typeof opt === 'number' ? opt : parseFloat((opt + '').replace(/,/g, ''));
                             return isNaN(numOpt) ? opt : numOpt;
                         });
+                    } else {
+                        problem.optionRaw = [];
                     }
                 }
                 return problem;
@@ -883,6 +913,7 @@
                 updateWeekDurationDisplay();
                 if (englishLevelSelect) englishLevelSelect.value = englishLevel.toString();
                 if (mathLevelSelect) mathLevelSelect.value = mathLevel.toString();
+                updateEnglishInfo();
             }
         }
         
@@ -937,6 +968,7 @@
                 subjectHeader.textContent = '🇺🇸 AI 영어 공부';
                 englishInfo.classList.remove('hidden');
                 mathInfo.classList.add('hidden');
+                updateEnglishInfo();
                 loadProblem();
             } else if (sessionType === 'korean') {
                 subjectHeader.textContent = '📝 AI 한글 공부';
@@ -981,15 +1013,16 @@
             const baseScore = 10;
             const bonus = consecutiveCorrectEnglish * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
-            const shuffledOptions = [...problem.options].sort(() => Math.random() - 0.5);
-            let optionsHtml = shuffledOptions.map(option => `<button class="english-option btn btn-blue w-full p-4 text-xl">${option.toString().trim().normalize('NFC')}</button>`).join('');
-            let questionHTML = `<p class="text-2xl text-gray-800 mb-6 min-h-[6rem]">${problem.q.replace(/\n/g, '<br>')}</p>`;
+            const normalizedOptions = (problem.options || []).map(opt => opt.toString().trim().normalize('NFC'));
+            const shuffledOptions = [...normalizedOptions].sort(() => Math.random() - 0.5);
+            const optionsHtml = shuffledOptions.map(option => `<button class="english-option btn btn-blue option-button w-full p-4">${option}</button>`).join('');
+            let questionHTML = `<p class="question-text text-gray-800 mb-6 min-h-[6rem]">${problem.q.replace(/\n/g, '<br>')}</p>`;
             if (problem.category === 'Main Idea') {
-                questionHTML = `<p class="english-question-text text-gray-800 mb-6 min-h-[6rem]">${problem.q.replace(/\n/g, '<br>')}</p>`;
+                questionHTML = `<p class="english-question-text question-text text-gray-800 mb-6 min-h-[6rem]">${problem.q.replace(/\n/g, '<br>')}</p>`;
             }
             problemContainer.innerHTML = `<div class="w-full"><div class="mb-4"><span class="text-sm font-bold text-white bg-purple-500 px-3 py-1 rounded-full">${problem.category}</span></div>${questionHTML}<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div></div>`;
             document.querySelectorAll('.english-option').forEach(button => {
-                button.addEventListener('click', (event) => checkEnglishAnswer(problem, event.target.textContent));
+                button.addEventListener('click', (event) => checkEnglishAnswer(problem, event.target.textContent.trim()));
             });
         }
 
@@ -1025,7 +1058,11 @@
             feedbackOverlay.classList.remove('hidden');
             saveAllData();
             
-            actionButtons.innerHTML = `<button id="next-problem" class="btn btn-blue">Next Problem</button><button id="save-problem" class="btn btn-orange">Save Problem</button>${problem.solution ? `<button id="show-solution" class="btn btn-gray">View Solution</button>` : ''}`;
+            actionButtons.innerHTML = `
+                <button id="save-problem" class="btn btn-save option-button w-full md:w-auto min-w-[9rem]">문제 저장</button>
+                <button id="next-problem" class="btn btn-next option-button w-full md:w-auto min-w-[9rem]">다음 문제</button>
+                ${problem.solution ? `<button id="show-solution" class="btn btn-solution option-button w-full md:w-auto min-w-[9rem]">풀이 보기</button>` : ''}
+            `;
             document.getElementById('save-problem').onclick = () => saveCurrentProblemForLater(problem);
             
             if (problem.solution) {
@@ -1051,11 +1088,12 @@
             const baseScore = 10;
             const bonus = consecutiveCorrectKorean * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
-            const shuffledOptions = [...problem.options].sort(() => Math.random() - 0.5);
-            let optionsHtml = shuffledOptions.map(option => `<button class="korean-option btn btn-blue w-full p-4 text-xl">${option.toString().trim().normalize('NFC')}</button>`).join('');
-            problemContainer.innerHTML = `<div class="w-full"><div class="mb-4"><span class="text-sm font-bold text-white bg-cyan-500 px-3 py-1 rounded-full">${problem.category}</span></div><p class="text-2xl text-gray-800 mb-6 min-h-[6rem]">${problem.q}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div></div>`;
+            const normalizedOptions = (problem.options || []).map(opt => opt.toString().trim().normalize('NFC'));
+            const shuffledOptions = [...normalizedOptions].sort(() => Math.random() - 0.5);
+            const optionsHtml = shuffledOptions.map(option => `<button class="korean-option btn btn-blue option-button w-full p-4">${option}</button>`).join('');
+            problemContainer.innerHTML = `<div class="w-full"><div class="mb-4"><span class="text-sm font-bold text-white bg-cyan-500 px-3 py-1 rounded-full">${problem.category}</span></div><p class="question-text text-gray-800 mb-6 min-h-[6rem]">${problem.q}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div></div>`;
             document.querySelectorAll('.korean-option').forEach(button => {
-                button.onclick = () => checkKoreanAnswer(problem, button.textContent);
+                button.onclick = () => checkKoreanAnswer(problem, button.textContent.trim());
             });
         }
 
@@ -1081,7 +1119,11 @@
             }
             feedbackOverlay.classList.remove('hidden');
             saveAllData();
-            actionButtons.innerHTML = `<button id="next-problem" class="btn btn-blue">다음 문제</button><button id="save-problem" class="btn btn-orange">문제 저장</button>${problem.solution ? `<button id="show-solution" class="btn btn-gray">풀이 보기</button>` : ''}`;
+            actionButtons.innerHTML = `
+                <button id="save-problem" class="btn btn-save option-button w-full md:w-auto min-w-[9rem]">문제 저장</button>
+                <button id="next-problem" class="btn btn-next option-button w-full md:w-auto min-w-[9rem]">다음 문제</button>
+                ${problem.solution ? `<button id="show-solution" class="btn btn-solution option-button w-full md:w-auto min-w-[9rem]">풀이 보기</button>` : ''}
+            `;
             document.getElementById('save-problem').onclick = () => saveCurrentProblemForLater(problem);
             if (problem.solution) {
                 document.getElementById('show-solution').onclick = () => {
@@ -1107,6 +1149,10 @@
             updateMathInfo();
         }
         
+        function updateEnglishInfo() {
+            englishDifficultyDisplay.textContent = `난이도: ${englishLevel}`;
+        }
+
         function updateMathInfo() {
             mathDifficultyDisplay.textContent = `난이도: ${mathLevel}`;
             mathScoreDisplay.textContent = `맞은 개수: ${mathScore}`;
@@ -1116,21 +1162,54 @@
             const baseScore = 5 + mathLevel;
             const bonus = consecutiveCorrectMath * 2;
             currentProblemScoreContainer.innerHTML = `이번 문제 점수: ${baseScore}점 + 연속 정답 보너스 ${bonus}점 = <span class="text-blue-600">${baseScore + bonus}점</span>`;
-            const formatNum = (n) => typeof n !== 'number' || !isFinite(n) ? n : Number.isInteger(n) ? n.toString() : n.toFixed(Math.abs(n) < 1 ? 2 : 1).replace(/\.0$/, '');
-            const shuffledOptions = [...problem.options].map(o => typeof o === 'number' ? o : parseFloat((o + '').replace(/,/g, ''))).sort(() => Math.random() - 0.5);
-            const isWordProblem = problem.q_en.split(' ').length > 5;
-            const questionHtml = isWordProblem ? `<p class="text-2xl text-gray-800 mb-2">${problem.q_ko}</p><p class="text-base text-gray-500 mb-8">${problem.q_en}</p>` : `<p class="text-5xl font-bold text-gray-800 mb-2">${problem.q_ko}</p><p class="text-xl text-gray-500 mb-8">${problem.q_en}</p>`;
-            problemContainer.innerHTML = `<div class="text-center w-full">${questionHtml}<div class="grid grid-cols-2 gap-4 options-grid">${shuffledOptions.map(option => `<button class="math-option btn btn-blue w-full p-4 text-2xl" data-value="${typeof option === 'number' ? option : parseFloat((option + '').replace(/,/g, ''))}">${Number.isFinite(option) ? formatNum(option) : option}</button>`).join('')}</div></div>`;
-            document.querySelectorAll('.math-option').forEach(b => {
-                b.onclick = () => checkMathAnswer(problem, b.getAttribute('data-value'));
+            const rawOptions = Array.isArray(problem.optionRaw) && problem.optionRaw.length ? problem.optionRaw : (problem.options || []);
+            const normalizedOptions = rawOptions.map((rawOpt, index) => {
+                const numericSource = Array.isArray(problem.options) && problem.options[index] !== undefined ? problem.options[index] : rawOpt;
+                const rawString = rawOpt !== undefined && rawOpt !== null ? rawOpt.toString() : (numericSource !== undefined && numericSource !== null ? numericSource.toString() : '');
+                const numeric = typeof numericSource === 'number' ? numericSource : parseFloat(rawString.replace(/,/g, ''));
+                return {
+                    numeric: Number.isFinite(numeric) ? numeric : null,
+                    display: rawString.trim() || (Number.isFinite(numeric) ? formatMathValue(numeric) : '')
+                };
+            });
+            const shuffledOptions = normalizedOptions.map(option => ({ ...option })).sort(() => Math.random() - 0.5);
+            const isWordProblem = (problem.q_en || '').split(' ').length > 5;
+            const questionHtml = isWordProblem
+                ? `<div class="mb-8"><p class="question-text text-gray-800 mb-3">${problem.q_ko}</p><p class="question-text text-gray-500">${problem.q_en}</p></div>`
+                : `<div class="mb-8 text-center"><p class="question-text text-gray-800 font-bold mb-3">${problem.q_ko}</p><p class="question-text text-gray-500">${problem.q_en}</p></div>`;
+            const optionsHtml = shuffledOptions.map((option, index) => `<button class="math-option btn btn-blue option-button w-full p-4" data-index="${index}">${formatMathValue(option.numeric, option.display)}</button>`).join('');
+            problemContainer.innerHTML = `<div class="w-full">${questionHtml}<div class="grid grid-cols-2 gap-4 options-grid">${optionsHtml}</div></div>`;
+            document.querySelectorAll('.math-option').forEach(button => {
+                const option = shuffledOptions[parseInt(button.dataset.index, 10)];
+                button.onclick = () => checkMathAnswer(problem, option);
             });
         }
         
-        function checkMathAnswer(problem, userAnswer) {
-            const normalizeNumber = (num) => num === null || num === undefined || num === '' ? NaN : parseFloat(num.toString().replace(/,/g, ''));
-            const normalizedUserAnswer = normalizeNumber(userAnswer);
+        function checkMathAnswer(problem, selectedOption) {
+            const getNumericFromOption = (option) => {
+                if (option && typeof option === 'object') {
+                    if (option.numeric !== null && option.numeric !== undefined) {
+                        return parseFloat(option.numeric);
+                    }
+                    if (option.display !== undefined) {
+                        const parsed = parseFloat(option.display.toString().replace(/,/g, ''));
+                        return Number.isNaN(parsed) ? NaN : parsed;
+                    }
+                }
+                if (option === null || option === undefined || option === '') return NaN;
+                const parsed = parseFloat(option.toString().replace(/,/g, ''));
+                return Number.isNaN(parsed) ? NaN : parsed;
+            };
+            const normalizeNumber = (value) => {
+                if (value === null || value === undefined || value === '') return NaN;
+                if (typeof value === 'number') return value;
+                const parsed = parseFloat(value.toString().replace(/,/g, ''));
+                return Number.isNaN(parsed) ? NaN : parsed;
+            };
+            const normalizedUserAnswer = getNumericFromOption(selectedOption);
             const normalizedCorrectAnswer = normalizeNumber(problem.a);
             let isCorrect = !isNaN(normalizedUserAnswer) && !isNaN(normalizedCorrectAnswer) && Math.abs(normalizedUserAnswer - normalizedCorrectAnswer) < Math.max(0.01, Math.abs(normalizedCorrectAnswer) * 0.001);
+            const correctAnswerDisplay = formatMathValue(problem.a, problem.answerRaw);
             if (currentSessionType !== 'review') updateStats('math', `level_${mathLevel}`, isCorrect);
             document.querySelectorAll('.math-option').forEach(btn => btn.disabled = true);
             if (isCorrect) {
@@ -1151,7 +1230,7 @@
             } else {
                 const penalty = Math.round((5 + mathLevel) / 2) + consecutiveIncorrect;
                 addScore(-penalty, 'math');
-                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>아쉬워요... (-${penalty}점) 정답은 ${problem.a} 입니다.</span></div>`;
+                feedbackContent.innerHTML = `<div class="flex items-center justify-center gap-4 text-red-500"><img src="roopy_fail.png" alt="Fail" class="w-32 h-32 rounded-lg"><span>아쉬워요... (-${penalty}점) 정답은 ${correctAnswerDisplay} 입니다.</span></div>`;
                 if (currentSessionType !== 'review') {
                     mistakes.push(problem);
                     consecutiveIncorrect++; 
@@ -1167,7 +1246,11 @@
             feedbackOverlay.classList.remove('hidden');
             saveAllData();
             if (currentSessionType !== 'review') updateMathInfo();
-            actionButtons.innerHTML = `<button id="next-problem" class="btn btn-blue">다음 문제</button><button id="save-problem" class="btn btn-orange">문제 저장</button>${problem.solution ? `<button id="show-solution" class="btn btn-gray">풀이 보기</button>` : ''}`;
+            actionButtons.innerHTML = `
+                <button id="save-problem" class="btn btn-save option-button w-full md:w-auto min-w-[9rem]">문제 저장</button>
+                <button id="next-problem" class="btn btn-next option-button w-full md:w-auto min-w-[9rem]">다음 문제</button>
+                ${problem.solution ? `<button id="show-solution" class="btn btn-solution option-button w-full md:w-auto min-w-[9rem]">풀이 보기</button>` : ''}
+            `;
             document.getElementById('save-problem').onclick = () => saveCurrentProblemForLater(problem);
             if (problem.solution) {
                 document.getElementById('show-solution').onclick = () => {
@@ -1384,6 +1467,7 @@
                     englishLevel = newLevel;
                     consecutiveCorrectEnglish = 0;
                     prefetchedEnglishProblem = null;
+                    updateEnglishInfo();
                     saveAllData();
                     alert(`영어 레벨이 ${newLevel}로 변경되었습니다!`);
                     updateHomeScreenUI();
